@@ -1,7 +1,16 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, send_from_directory
 import requests
+import os
 
 app = Flask(__name__)
+
+# Path to the directory where your HTML file is stored
+STATIC_FOLDER = os.path.abspath('./')
+
+@app.route('/')
+def index():
+    # Serve the index.html file
+    return send_from_directory(STATIC_FOLDER, 'index.html')
 
 @app.route('/proxy', methods=['GET'])
 def proxy():
