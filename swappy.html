@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Link Replacer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 100px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        p#status {
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Link Replacer</h1>
+    <p>Enter a URL below to fetch and process the HTML content. The modified HTML file will replace all image links and will be available for download.</p>
+
+    <form id="url-form">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" placeholder="https://example.com" required>
+        <button type="submit">Process</button>
+    </form>
+
+    <p id="status"></p>
+
+    <script>
+        // List of random words for replacement
+        const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+
+        // Function to get a random word
+        const getRandomWord = () => randomWords[Math.floor(Math.random() * randomWords.length)];
+
+        // Function to replace image links in the fetched HTML content
+        const replaceImageLinks = (htmlContent) => {
+            const parser = new DOMParser(); // Parse the HTML content
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            // Replace <img> src attributes
+            doc.querySelectorAll('img').forEach((img) => {
+                const width = img.getAttribute('width') || '800'; // Default width
+                const height = img.getAttribute('height') || '600'; // Default height
+                img.setAttribute('src', `https://loremflickr.com/${width}/${height}/${getRandomWord()}`);
+            });
+
+            // Replace <source> srcset attributes
+            doc.querySelectorAll('source').forEach((source) => {
+                const srcset = source.getAttribute('srcset');
+                if (srcset) {
+                    const newSrcset = srcset
+                        .split(',')
+                        .map((part) => {
+                            const [url, size] = part.trim().split(' ');
+                            const [width, height] = size?.split('x') || ['800', '600'];
+                            return `https://loremflickr.com/${width}/${height}/${getRandomWord()} ${size}`;
+                        })
+                        .join(', ');
+                    source.setAttribute('srcset', newSrcset);
+                }
+            });
+
+            // Replace inline style background images
+            doc.querySelectorAll('[style]').forEach((tag) => {
+                const style = tag.getAttribute('style');
+                const newStyle = style.replace(/url\((['"]?)(.*?)\1\)/g, () => {
+                    return `url('https://loremflickr.com/1920/600/${getRandomWord()}')`;
+                });
+                tag.setAttribute('style', newStyle);
+            });
+
+            return doc.documentElement.outerHTML; // Return the modified HTML
+        };
+
+        document.getElementById("url-form").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Prevent default form submission behavior
+            const url = document.getElementById("url").value; // Get the URL from the form input
+            const status = document.getElementById("status"); // Element to show processing status
+
+            status.textContent = "Processing...";
+
+            try {
+                // Use a public CORS proxy service
+                const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+                const response = await fetch(proxyUrl);
+
+                if (!response.ok) {
+                    throw new Error(`Error fetching the URL: ${response.statusText}`);
+                }
+
+                const htmlContent = await response.text(); // Get the HTML content of the page
+                const processedContent = replaceImageLinks(htmlContent); // Process the HTML content
+
+                // Create a downloadable file
+                const blob = new Blob([processedContent], { type: 'text/html' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'modified_page.html'; // Name of the downloaded file
+                link.click();
+
+                status.textContent = "Download complete!";
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
