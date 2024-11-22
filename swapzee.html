@@ -34,27 +34,22 @@
     <div id="output"></div>
 
     <script>
-        // List of random words
         const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
 
-        // Get a random word
         function getRandomWord() {
             return randomWords[Math.floor(Math.random() * randomWords.length)];
         }
 
-        // Replace image links in HTML content
         function replaceImageLinks(htmlContent, baseUrl) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(htmlContent, 'text/html');
 
-            // Replace img src attributes
             doc.querySelectorAll('img').forEach(img => {
                 const width = img.getAttribute('width') || 800;
                 const height = img.getAttribute('height') || 600;
                 img.src = `https://loremflickr.com/${width}/${height}/${getRandomWord()}`;
             });
 
-            // Replace source srcset attributes
             doc.querySelectorAll('source[srcset]').forEach(source => {
                 const srcset = source.getAttribute('srcset').split(',').map(entry => {
                     const [url, size] = entry.trim().split(/\s+/);
@@ -64,7 +59,6 @@
                 source.setAttribute('srcset', srcset);
             });
 
-            // Replace inline styles with background images
             doc.querySelectorAll('[style]').forEach(el => {
                 const newStyle = el.style.cssText.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
                     return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`;
@@ -72,7 +66,6 @@
                 el.setAttribute('style', newStyle);
             });
 
-            // Replace <style> tag content
             doc.querySelectorAll('style').forEach(styleTag => {
                 if (styleTag.innerHTML) {
                     styleTag.innerHTML = styleTag.innerHTML.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
@@ -81,7 +74,6 @@
                 }
             });
 
-            // Replace external CSS links
             doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
                 const fullUrl = new URL(link.getAttribute('href'), baseUrl).href;
                 fetch(fullUrl)
@@ -116,8 +108,12 @@
                 const data = await response.json();
                 const modifiedHtml = replaceImageLinks(data.contents, url);
 
-                // Display the modified HTML content
                 output.innerHTML = modifiedHtml;
+
+                // Open the modified HTML content in a new tab
+                const blob = new Blob([modifiedHtml], { type: 'text/html' });
+                const newTabUrl = URL.createObjectURL(blob);
+                window.open(newTabUrl, '_blank');
             } catch (error) {
                 console.error('Error fetching URL:', error.message);
                 output.textContent = `Failed to process the URL: ${error.message}`;
