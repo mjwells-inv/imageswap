@@ -41,10 +41,10 @@ form.addEventListener('submit', async (event) => {
     const url = urlInput.value;
 
     try {
-        statusMessage.textContent = 'Fetching content...';
-        const response = await fetch(`/proxy?url=${encodeURIComponent(url)}`);
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        const html = await response.text();
+        const data = await response.json();
+        const html = data.contents;
 
         const modifiedContent = replaceImageLinks(html);
 
