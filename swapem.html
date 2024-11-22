@@ -58,7 +58,7 @@
                 source.setAttribute('srcset', srcset);
             });
 
-            // Replace inline styles with background or background-image
+            // Replace inline styles with background
             doc.querySelectorAll('[style]').forEach(el => {
                 el.style.cssText = el.style.cssText.replace(
                     /background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g,
