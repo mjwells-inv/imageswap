@@ -1,59 +1,72 @@
-// script.js
-const form = document.getElementById('urlForm');
-const urlInput = document.getElementById('urlInput');
-const resultFrame = document.getElementById('resultFrame');
-const statusMessage = document.getElementById('statusMessage');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Link Replacer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
 
-// List of random words
-const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+        #output {
+            margin-top: 20px;
+            text-align: left;
+            border: 1px solid #ccc;
+            padding: 10px;
+            width: 80%;
+            margin: 20px auto;
+            overflow: auto;
+            max-height: 500px;
+        }
 
-function getRandomWord() {
-    return randomWords[Math.floor(Math.random() * randomWords.length)];
-}
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Link Replacer</h1>
+    <p>Enter a URL to fetch and replace its image links:</p>
+    <input type="url" id="urlInput" placeholder="Enter a valid URL" required>
+    <button onclick="processPage()">Process</button>
+    <div id="output"></div>
 
-function replaceImageLinks(htmlContent) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, 'text/html');
+    <script>
+        function getRandomWord() {
+            const words = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+            return words[Math.floor(Math.random() * words.length)];
+        }
 
-    // Replace image src attributes
-    doc.querySelectorAll('img').forEach(img => {
-        img.src = `https://loremflickr.com/800/600/${getRandomWord()}`;
-    });
+        async function processPage() {
+            const url = document.getElementById('urlInput').value;
+            const output = document.getElementById('output');
 
-    // Replace background images in styles
-    doc.querySelectorAll('[style]').forEach(el => {
-        el.style.backgroundImage = el.style.backgroundImage.replace(
-            /url\(["']?(.+?)["']?\)/g,
-            `url(https://loremflickr.com/1920/600/${getRandomWord()})`
-        );
-    });
+            if (!/^https?:\/\/.+/i.test(url)) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
 
-    // Replace CSS background images
-    doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        link.remove(); // Simplified: remove external stylesheets
-    });
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-    return doc.documentElement.outerHTML;
-}
+                let html = await response.text();
 
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const url = urlInput.value;
+                // Replace <img> src attributes
+                html = html.replace(/<img [^>]*src="([^"]*)"/g, (match, src) => {
+                    return match.replace(src, `https://loremflickr.com/800/600/${getRandomWord()}`);
+                });
 
-    try {
-        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        const data = await response.json();
-        const html = data.contents;
-
-        const modifiedContent = replaceImageLinks(html);
-
-        // Display modified content in iframe
-        const blob = new Blob([modifiedContent], { type: 'text/html' });
-        resultFrame.src = URL.createObjectURL(blob);
-        resultFrame.style.display = 'block';
-        statusMessage.textContent = 'Content processed and displayed below!';
-    } catch (error) {
-        statusMessage.textContent = `Error: ${error.message}`;
-    }
-});
+                output.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                output.textContent = `Failed to fetch the URL: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
