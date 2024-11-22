@@ -40,61 +40,69 @@
             return randomWords[Math.floor(Math.random() * randomWords.length)];
         }
 
-        function replaceImageLinks(htmlContent, baseUrl) {
-			const parser = new DOMParser();
-			const doc = parser.parseFromString(htmlContent, 'text/html');
+        async function replaceImageLinks(htmlContent, baseUrl) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
 
-			// Replace <img> src attributes
-			doc.querySelectorAll('img').forEach(img => {
-				const width = img.getAttribute('width') || 800;
-				const height = img.getAttribute('height') || 600;
-				img.src = `https://loremflickr.com/${width}/${height}/${getRandomWord()}`;
-			});
+            // Replace <img> src attributes
+            doc.querySelectorAll('img').forEach(img => {
+                const width = img.getAttribute('width') || 800;
+                const height = img.getAttribute('height') || 600;
+                img.src = `https://loremflickr.com/${width}/${height}/${getRandomWord()}`;
+            });
 
-			// Replace <source> srcset attributes
-			doc.querySelectorAll('source[srcset]').forEach(source => {
-				const srcset = source.getAttribute('srcset').split(',').map(entry => {
-					const [url, size] = entry.trim().split(/\s+/);
-					const [width, height] = size?.split('x') || [800, 600];
-					return `${`https://loremflickr.com/${width}/${height}/${getRandomWord()}`} ${size}`;
-				}).join(', ');
-				source.setAttribute('srcset', srcset);
-			});
+            // Replace <source> srcset attributes
+            doc.querySelectorAll('source[srcset]').forEach(source => {
+                const srcset = source.getAttribute('srcset').split(',').map(entry => {
+                    const [url, size] = entry.trim().split(/\s+/);
+                    const [width, height] = size?.split('x') || [800, 600];
+                    return `${`https://loremflickr.com/${width}/${height}/${getRandomWord()}`} ${size}`;
+                }).join(', ');
+                source.setAttribute('srcset', srcset);
+            });
 
-			// Replace inline styles with background images
-			doc.querySelectorAll('[style]').forEach(el => {
-				el.style.cssText = el.style.cssText.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)(.*)/g, (match, url, rest) => {
-					return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()}) ${rest.trim()}`;
-				});
-			});
+            // Replace inline styles with background images
+            doc.querySelectorAll('[style]').forEach(el => {
+                el.style.cssText = el.style.cssText.replace(
+                    /background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g,
+                    () => `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`
+                );
+            });
 
-			// Replace CSS in <style> tags
-			doc.querySelectorAll('style').forEach(styleTag => {
-				if (styleTag.innerHTML) {
-					styleTag.innerHTML = styleTag.innerHTML.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)(.*)/g, (match, url, rest) => {
-						return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()}) ${rest.trim()}`;
-					});
-				}
-			});
+            // Replace CSS in <style> tags
+            doc.querySelectorAll('style').forEach(styleTag => {
+                if (styleTag.innerHTML) {
+                    styleTag.innerHTML = styleTag.innerHTML.replace(
+                        /background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g,
+                        () => `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`
+                    );
+                }
+            });
 
-			// Replace external CSS links
-			doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-				const fullUrl = new URL(link.getAttribute('href'), baseUrl).href;
-				fetch(fullUrl)
-					.then(response => response.text())
-					.then(cssContent => {
-						const modifiedCSS = cssContent.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)(.*)/g, (match, url, rest) => {
-							return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()}) ${rest.trim()}`;
-						});
-						const styleTag = document.createElement('style');
-						styleTag.innerHTML = modifiedCSS;
-						link.replaceWith(styleTag);
-					})
-					.catch(err => console.error(`Failed to fetch CSS: ${err}`));
-			});
+            // Replace external CSS background images
+            const cssLinks = doc.querySelectorAll('link[rel="stylesheet"]');
+            for (const link of cssLinks) {
+                try {
+                    const cssUrl = new URL(link.href, baseUrl).href;
+                    const response = await fetch(cssUrl);
+                    if (!response.ok) continue;
 
-			return doc.documentElement.outerHTML;
-		}
+                    const cssContent = await response.text();
+                    const modifiedCSS = cssContent.replace(
+                        /background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g,
+                        () => `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`
+                    );
+
+                    const styleTag = document.createElement('style');
+                    styleTag.innerHTML = modifiedCSS;
+                    link.replaceWith(styleTag);
+                } catch (err) {
+                    console.error(`Failed to process CSS file: ${err.message}`);
+                }
+            }
+
+            return doc.documentElement.outerHTML;
+        }
 
         async function processPage() {
             const url = document.getElementById('urlInput').value;
@@ -110,8 +118,9 @@
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
                 const data = await response.json();
-                const modifiedHtml = replaceImageLinks(data.contents, url);
+                const modifiedHtml = await replaceImageLinks(data.contents, url);
 
+                // Display the modified HTML content in the output div
                 output.innerHTML = modifiedHtml;
 
                 // Open the modified HTML content in a new tab
