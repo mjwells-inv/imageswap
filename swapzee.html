@@ -50,20 +50,10 @@
                 img.src = `https://loremflickr.com/${width}/${height}/${getRandomWord()}`;
             });
 
-            doc.querySelectorAll('source[srcset]').forEach(source => {
-                const srcset = source.getAttribute('srcset').split(',').map(entry => {
-                    const [url, size] = entry.trim().split(/\s+/);
-                    const [width, height] = size?.split('x') || [800, 600];
-                    return `${`https://loremflickr.com/${width}/${height}/${getRandomWord()}`} ${size}`;
-                }).join(', ');
-                source.setAttribute('srcset', srcset);
-            });
-
             doc.querySelectorAll('[style]').forEach(el => {
-                const newStyle = el.style.cssText.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
+                el.style.cssText = el.style.cssText.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
                     return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`;
                 });
-                el.setAttribute('style', newStyle);
             });
 
             doc.querySelectorAll('style').forEach(styleTag => {
@@ -110,7 +100,6 @@
 
                 output.innerHTML = modifiedHtml;
 
-                // Open the modified HTML content in a new tab
                 const blob = new Blob([modifiedHtml], { type: 'text/html' });
                 const newTabUrl = URL.createObjectURL(blob);
                 window.open(newTabUrl, '_blank');
