@@ -1,59 +1,73 @@
-// script.js
-const form = document.getElementById('urlForm');
-const urlInput = document.getElementById('urlInput');
-const resultFrame = document.getElementById('resultFrame');
-const statusMessage = document.getElementById('statusMessage');
+import re
+import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
+import webbrowser
+import tempfile
 
-// List of random words
-const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+def generate_loremflickr_link(width, height, tags):
+    return f"https://loremflickr.com/{width}/{height}/{','.join(tags)}"
 
-function getRandomWord() {
-    return randomWords[Math.floor(Math.random() * randomWords.length)];
-}
+def extract_theme(html):
+    # Extract keywords/themes based on meta tags, title, or content
+    soup = BeautifulSoup(html, "html.parser")
+    keywords = soup.find("meta", attrs={"name": "keywords"})
+    description = soup.find("meta", attrs={"name": "description"})
+    title = soup.title.string if soup.title else ""
+    
+    tags = []
+    if keywords and keywords["content"]:
+        tags.extend(keywords["content"].split(","))
+    if description and description["content"]:
+        tags.extend(description["content"].split())
+    if title:
+        tags.extend(title.split())
+    
+    # Simplify tags for loremflickr (remove duplicates, spaces, and irrelevant words)
+    tags = list(set([tag.lower().strip() for tag in tags if len(tag) > 2]))
+    return tags[:3] if tags else ["default"]  # Limit to 3 tags for loremflickr
 
-function replaceImageLinks(htmlContent) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlContent, 'text/html');
+def replace_image_links(html, tags):
+    soup = BeautifulSoup(html, "html.parser")
+    replaced_domains = set()
 
-    // Replace image src attributes
-    doc.querySelectorAll('img').forEach(img => {
-        img.src = `https://loremflickr.com/800/600/${getRandomWord()}`;
-    });
+    for img in soup.find_all("img", src=True):
+        original_src = img["src"]
+        # Match URLs with image sizes like 800x600 in them
+        size_match = re.search(r"(\d+)/(\d+)", original_src)
+        if size_match:
+            width, height = size_match.groups()
+            new_src = generate_loremflickr_link(width, height, tags)
+            img["src"] = new_src
+            replaced_domains.add(urlparse(original_src).netloc)
+    
+    return str(soup), replaced_domains
 
-    // Replace background images in styles
-    doc.querySelectorAll('[style]').forEach(el => {
-        el.style.backgroundImage = el.style.backgroundImage.replace(
-            /url\(["']?(.+?)["']?\)/g,
-            `url(https://loremflickr.com/1920/600/${getRandomWord()})`
-        );
-    });
+def main():
+    url = input("Enter the URL of the webpage: ")
+    
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching the URL: {e}")
+        return
 
-    // Replace CSS background images
-    doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
-        link.remove(); // Simplified: remove external stylesheets
-    });
+    html = response.text
+    tags = extract_theme(html)
+    updated_html, replaced_domains = replace_image_links(html, tags)
+    
+    print("Domains of replaced image URLs:")
+    for domain in replaced_domains:
+        print(f"- {domain}")
 
-    return doc.documentElement.outerHTML;
-}
+    # Save the updated HTML locally and open in browser
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode="w", encoding="utf-8") as temp_file:
+        temp_file.write(updated_html)
+        temp_file_path = temp_file.name
+    
+    print(f"Opening the modified page locally: {temp_file_path}")
+    webbrowser.open(f"file://{temp_file_path}")
 
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const url = urlInput.value;
-
-    try {
-        statusMessage.textContent = 'Fetching content...';
-        const response = await fetch(`/proxy?url=${encodeURIComponent(url)}`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-        const html = await response.text();
-
-        const modifiedContent = replaceImageLinks(html);
-
-        // Display modified content in iframe
-        const blob = new Blob([modifiedContent], { type: 'text/html' });
-        resultFrame.src = URL.createObjectURL(blob);
-        resultFrame.style.display = 'block';
-        statusMessage.textContent = 'Content processed and displayed below!';
-    } catch (error) {
-        statusMessage.textContent = `Error: ${error.message}`;
-    }
-});
+if __name__ == "__main__":
+    main()
