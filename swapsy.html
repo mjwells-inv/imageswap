@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Link Replacer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 120px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        p#status {
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Link Replacer</h1>
+    <p>Enter a URL below to fetch and process the HTML content. The modified HTML file will replace all image links and will be available for download.</p>
+
+    <form id="url-form">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" placeholder="https://example.com" required>
+        <button type="submit">Process</button>
+    </form>
+
+    <p id="status"></p>
+
+    <script>
+        // List of random words for replacement
+        const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+
+        // Function to get a random word
+        const getRandomWord = () => randomWords[Math.floor(Math.random() * randomWords.length)];
+
+        // Function to replace image links in the fetched HTML content
+        const replaceImageLinks = (htmlContent) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            // Replace <img> src attributes
+            doc.querySelectorAll('img').forEach((img) => {
+                const width = img.getAttribute('width') || '800';
+                const height = img.getAttribute('height') || '600';
+                img.setAttribute('src', `https://loremflickr.com/${width}/${height}/${getRandomWord()}`);
+            });
+
+            return doc.documentElement.outerHTML;
+        };
+
+        document.getElementById("url-form").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Prevent default form submission behavior
+            const url = document.getElementById("url").value; // Get the URL from the form input
+            const status = document.getElementById("status"); // Element to show processing status
+
+            status.textContent = "Processing...";
+
+            try {
+                // Use a public CORS proxy
+                const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+
+                const response = await fetch(proxyUrl, {
+                    method: 'GET',
+                    headers: {
+                        // Mimic a browser's request headers
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36',
+                        'Referer': url,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error fetching the URL: ${response.statusText}`);
+                }
+
+                const htmlContent = await response.text();
+                const processedContent = replaceImageLinks(htmlContent);
+
+                // Create a downloadable file
+                const blob = new Blob([processedContent], { type: 'text/html' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'modified_page.html'; // Name of the downloaded file
+                link.click();
+
+                status.textContent = "Download complete!";
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
