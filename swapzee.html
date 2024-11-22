@@ -34,9 +34,70 @@
     <div id="output"></div>
 
     <script>
+        // List of random words
+        const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+
+        // Get a random word
         function getRandomWord() {
-            const words = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
-            return words[Math.floor(Math.random() * words.length)];
+            return randomWords[Math.floor(Math.random() * randomWords.length)];
+        }
+
+        // Replace image links in HTML content
+        function replaceImageLinks(htmlContent, baseUrl) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            // Replace img src attributes
+            doc.querySelectorAll('img').forEach(img => {
+                const width = img.getAttribute('width') || 800;
+                const height = img.getAttribute('height') || 600;
+                img.src = `https://loremflickr.com/${width}/${height}/${getRandomWord()}`;
+            });
+
+            // Replace source srcset attributes
+            doc.querySelectorAll('source[srcset]').forEach(source => {
+                const srcset = source.getAttribute('srcset').split(',').map(entry => {
+                    const [url, size] = entry.trim().split(/\s+/);
+                    const [width, height] = size?.split('x') || [800, 600];
+                    return `${`https://loremflickr.com/${width}/${height}/${getRandomWord()}`} ${size}`;
+                }).join(', ');
+                source.setAttribute('srcset', srcset);
+            });
+
+            // Replace inline styles with background images
+            doc.querySelectorAll('[style]').forEach(el => {
+                const newStyle = el.style.cssText.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
+                    return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`;
+                });
+                el.setAttribute('style', newStyle);
+            });
+
+            // Replace <style> tag content
+            doc.querySelectorAll('style').forEach(styleTag => {
+                if (styleTag.innerHTML) {
+                    styleTag.innerHTML = styleTag.innerHTML.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
+                        return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`;
+                    });
+                }
+            });
+
+            // Replace external CSS links
+            doc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+                const fullUrl = new URL(link.getAttribute('href'), baseUrl).href;
+                fetch(fullUrl)
+                    .then(response => response.text())
+                    .then(cssContent => {
+                        const modifiedCSS = cssContent.replace(/background(?:-image)?:\s*url\(['"]?(.*?)['"]?\)/g, (match, url) => {
+                            return `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`;
+                        });
+                        const styleTag = document.createElement('style');
+                        styleTag.innerHTML = modifiedCSS;
+                        link.replaceWith(styleTag);
+                    })
+                    .catch(err => console.error(`Failed to fetch CSS: ${err}`));
+            });
+
+            return doc.documentElement.outerHTML;
         }
 
         async function processPage() {
@@ -49,23 +110,17 @@
             }
 
             try {
-                // Fetch content using AllOrigins
                 const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                
+
                 const data = await response.json();
-                let html = data.contents;
+                const modifiedHtml = replaceImageLinks(data.contents, url);
 
-                // Replace <img> src attributes
-                html = html.replace(/<img [^>]*src="([^"]*)"/g, (match, src) => {
-                    return match.replace(src, `https://loremflickr.com/800/600/${getRandomWord()}`);
-                });
-
-                // Display the modified content
-                output.innerHTML = html;
+                // Display the modified HTML content
+                output.innerHTML = modifiedHtml;
             } catch (error) {
-                console.error('Fetch error:', error.message);
-                output.textContent = `Failed to fetch the URL: ${error.message}`;
+                console.error('Error fetching URL:', error.message);
+                output.textContent = `Failed to process the URL: ${error.message}`;
             }
         }
     </script>
