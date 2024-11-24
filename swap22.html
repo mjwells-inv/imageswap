@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Via Placeholder Replacer</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(145deg, #f7f1e3, #e9d8a6, #f0e6cc);
+            color: #2c3e50;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #8a6d3b;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #5a4631;
+        }
+
+        /* Form Styling */
+        input[type="url"] {
+            width: 60%;
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #d4c6a7;
+            border-radius: 20px;
+            font-size: 1em;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        input[type="url"]:focus {
+            border: 2px solid #8a6d3b;
+            background: #fefae0;
+            color: #2c3e50;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background: #8a6d3b;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #735837;
+            transform: scale(1.1);
+        }
+
+        /* Output Container */
+        #output {
+            margin-top: 10px;
+            padding: 10px 20px;
+            max-width: 500px;
+            background: #e9d8a6;
+            color: #5a4631;
+            border-radius: 10px;
+            border: 1px solid #d4c6a7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden initially */
+        }
+
+        #output.success {
+            border: 2px solid #4caf50;
+        }
+
+        #output.error {
+            border: 2px solid #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Via Placeholder Replacer v1.3</h1>
+    <p>Enter a URL to replace its bad image links with nature-themed placeholders:</p>
+    <input type="url" id="urlInput" placeholder="Enter a valid URL" required="">
+    <button onclick="processPage()">Process</button>
+    <div id="output"></div>
+
+	<script>
+		const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+
+		function getRandomWord() {
+			return randomWords[Math.floor(Math.random() * randomWords.length)];
+		}
+
+		async function replaceImageLinks(htmlContent, baseUrl) {
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(htmlContent, 'text/html');
+
+			// Replace <img> src attributes
+			doc.querySelectorAll('img').forEach(img => {
+				const width = img.getAttribute('width') || 800;
+				const height = img.getAttribute('height') || 600;
+				img.src = `https://loremflickr.com/${width}/${height}/${getRandomWord()}`;
+			});
+
+			// Replace <source> srcset attributes
+			doc.querySelectorAll('source[srcset]').forEach(source => {
+				const srcset = source.getAttribute('srcset').split(',').map(entry => {
+					const [url, size] = entry.trim().split(/\s+/);
+					const [width, height] = size?.split('x') || [800, 600];
+					return `${`https://loremflickr.com/${width}/${height}/${getRandomWord()}`} ${size}`;
+				}).join(', ');
+				source.setAttribute('srcset', srcset);
+			});
+
+			// Handle inline styles
+			doc.querySelectorAll('[style]').forEach(el => {
+				el.style.cssText = el.style.cssText.replace(
+					// Handle background shorthand with additional properties
+					/background:\s*url\(['"]?(.*?)['"]?\)(.*)/g,
+					(match, url, rest) => `background: url(https://loremflickr.com/1920/600/${getRandomWord()}) ${rest.trim()}`
+				).replace(
+					// Handle background-image specifically
+					/background-image:\s*url\(['"]?(.*?)['"]?\)/g,
+					() => `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`
+				);
+			});
+
+			// Handle <style> tags
+			doc.querySelectorAll('style').forEach(styleTag => {
+				if (styleTag.innerHTML) {
+					styleTag.innerHTML = styleTag.innerHTML.replace(
+						// Handle background shorthand with additional properties
+						/background:\s*url\(['"]?(.*?)['"]?\)(.*)/g,
+						(match, url, rest) => `background: url(https://loremflickr.com/1920/600/${getRandomWord()}) ${rest.trim()}`
+					).replace(
+						// Handle background-image specifically
+						/background-image:\s*url\(['"]?(.*?)['"]?\)/g,
+						() => `background-image: url(https://loremflickr.com/1920/600/${getRandomWord()})`
+					);
+				}
+			});
+
+			return doc.documentElement.outerHTML;
+		}
+
+		async function processPage() {
+			const urlInput = document.getElementById('urlInput').value;
+			const outputDiv = document.getElementById('output');
+
+			try {
+				const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`);
+				if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+				const data = await response.json();
+				const modifiedHtml = await replaceImageLinks(data.contents, urlInput);
+
+				outputDiv.className = 'success';
+				outputDiv.textContent = 'Page processed successfully! Opening in a new tab...';
+				outputDiv.style.display = 'block';
+
+				const blob = new Blob([modifiedHtml], { type: 'text/html' });
+				const newTabUrl = URL.createObjectURL(blob);
+				window.open(newTabUrl, '_blank');
+			} catch (error) {
+				console.error('Error processing the page:', error.message);
+				outputDiv.className = 'error';
+				outputDiv.textContent = `Failed to process the page: ${error.message}`;
+				outputDiv.style.display = 'block';
+			}
+		}
+	</script>
+
+
+</body>
+</html>
