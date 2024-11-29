@@ -294,6 +294,9 @@
                     if (firstOriginalImage.includes('wikimedia') || firstOriginalImage.includes('wikimedia commons')) {
                         footnote += '<br><em>* Wikimedia Commons is a repository of freely licensed media that the assistant often hallucinates links to or references links that no longer exist. These are usually broken images.</em>';
                     }
+					if ((!firstOriginalImage.includes('http') || !firstOriginalImage.includes(data:image)) {
+						footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
+					}
                 }
 
                 outputDiv.innerHTML += footnote;
