@@ -291,7 +291,7 @@
                     if (firstOriginalImage.includes('mj-wells') || firstOriginalImage.includes('file:///C:')) {
                         footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
                     } else {
-						if (!firstOriginalImage.includes('http') || !firstOriginalImage.startsWith('data:image/')) {
+						if (!firstOriginalImage.includes('http') && !firstOriginalImage.startsWith('data:image/')) {
 							footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
 						}
                     }
