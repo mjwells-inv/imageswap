@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Via Placeholder Replacer</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(145deg, #f7f1e3, #e9d8a6, #f0e6cc);
+            color: #2c3e50;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #8a6d3b;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #5a4631;
+        }
+
+        /* Form Styling */
+        input[type="url"] {
+            width: 60%;
+            max-width: 500px;
+            padding: 10px;
+            border: 1px solid #d4c6a7;
+            border-radius: 20px;
+            font-size: 1em;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        input[type="url"]:focus {
+            border: 2px solid #8a6d3b;
+            background: #fefae0;
+            color: #2c3e50;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background: #8a6d3b;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #735837;
+            transform: scale(1.1);
+        }
+
+        /* Output Container */
+        #output {
+            margin-top: 10px;
+            padding: 10px 20px;
+            max-width: 500px;
+            background: #e9d8a6;
+            color: #5a4631;
+            border-radius: 10px;
+            border: 1px solid #d4c6a7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden initially */
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        #output.success {
+            border: 2px solid #4caf50;
+        }
+
+        #output.error {
+            border: 2px solid #e74c3c;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(145deg, #2c3e50, #34495e, #22313f);
+            color: #ecf0f1;
+        }
+
+        /* Glowing Blue Neon for h1 in Dark Mode */
+        body.dark-mode h1 {
+            color: #0ff; /* Cyan for neon blue effect */
+            text-shadow:
+                0 0 5px #0ff,
+                0 0 55px #0ff,
+                0 0 75px #0ff;
+        }
+
+        /* Add '... After Dark' in pink neon */
+        body.dark-mode h1::after {
+            content: '... After Dark';
+            color: #f0f; /* Pink for neon effect */
+            margin-left: 10px;
+            text-shadow:
+                0 0 5px #f0f,
+                0 0 55px #f0f,
+                0 0 75px #f0f;
+        }
+
+        body.dark-mode p {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode input[type="url"] {
+            background: #3b3b3b;
+            border: 1px solid #555;
+            color: #ecf0f1;
+        }
+
+        body.dark-mode input[type="url"]:focus {
+            border: 2px solid #8a6d3b;
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        body.dark-mode button {
+            background: #8a6d3b;
+            color: #fff;
+        }
+
+        body.dark-mode button:hover {
+            background: #735837;
+        }
+
+        body.dark-mode #output {
+            background: #34495e;
+            color: #ecf0f1;
+            border: 1px solid #555;
+        }
+
+        /* Dark Mode Toggle Button */
+        #darkModeToggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            font-size: 1em;
+            background: #8a6d3b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        body.dark-mode #darkModeToggle {
+            background: #8a6d3b;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <button id="darkModeToggle">Toggle Dark Mode</button>
+    <h1>Via Placeholder Replacer v1.7</h1>
+    <p>Enter a URL to replace its image links with random placeholders:</p>
+    <input type="url" id="urlInput" placeholder="Enter a valid URL" required>
+    <button onclick="processPage()">Process</button>
+    <div id="output"></div>
+
+    <script>
+        const randomWords = ["wildlife", "nature", "mountains", "ocean", "forests", "desert", "sunset", "river"];
+
+        function getRandomWord() {
+            return randomWords[Math.floor(Math.random() * randomWords.length)];
+        }
+		
+		function escapeHTML(html) {
+			return html
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;')
+				.replace(/'/g, '&#39;');
+		}
+
+        async function replaceImageLinks(htmlContent, baseUrl) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            let firstOriginalImage = null; // Variable to store the first original image link
+
+            // Replace <img> src attributes
+            doc.querySelectorAll('img').forEach((img, index) => {
+                if (index === 0) {
+                    firstOriginalImage = img.src; // Capture the first original image link
+                }
+                const width = img.getAttribute('width') || 800;
+                const height = img.getAttribute('height') || 600;
+                img.src = `https://picsum.photos/${width}/${height}?random=${Math.random()}`;
+            });
+
+            // Replace inline styles with background images
+            doc.querySelectorAll('[style]').forEach(el => {
+                el.style.cssText = el.style.cssText.replace(
+                    /background(?:-image)?\s*:[^;]*url\((['"]?)(.*?)\1\)[^;]*;/gi,
+                    (match, quote, url) => {
+                        if (!firstOriginalImage) {
+                            firstOriginalImage = url; // Capture the first background image link
+                        }
+                        return `background: url(https://picsum.photos/1920/1080?random=${Math.random()});`;
+                    }
+                );
+            });
+
+            // Replace background-image URLs in <style> tags
+            doc.querySelectorAll('style').forEach(styleTag => {
+                if (styleTag.innerHTML) {
+                    styleTag.innerHTML = styleTag.innerHTML.replace(
+                        /background(?:-image)?\s*:[^;]*url\((['"]?)(.*?)\1\)[^;]*;/gi,
+                        (match, quote, url) => {
+                            if (!firstOriginalImage) {
+                                firstOriginalImage = url; // Capture the first style background image link
+                            }
+                            return `background: url(https://picsum.photos/1920/1080?random=${Math.random()});`;
+                        }
+                    );
+                }
+            });
+
+            // Replace image links in JavaScript objects or variables
+            doc.querySelectorAll('script').forEach(script => {
+                if (script.innerHTML) {
+                    script.innerHTML = script.innerHTML.replace(
+                        /(https?:\/\/.*?\.(?:jpg|jpeg|png|gif|webp))/gi,
+                        (match) => {
+                            if (!firstOriginalImage) {
+                                firstOriginalImage = match; // Capture the first image link in JS
+                            }
+                            return `https://picsum.photos/800/600?random=${Math.random()}`;
+                        }
+                    );
+                }
+            });
+
+            return { modifiedHtml: doc.documentElement.outerHTML, firstOriginalImage };
+        }
+
+        async function processPage() {
+            const urlInput = document.getElementById('urlInput').value;
+            const outputDiv = document.getElementById('output');
+
+            try {
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                const data = await response.json();
+                const { modifiedHtml, firstOriginalImage } = await replaceImageLinks(data.contents, urlInput);
+
+                outputDiv.className = 'success';
+                outputDiv.innerHTML = `Page processed successfully!<br>Original image link: <strong>${escapeHTML(firstOriginalImage || "None found")}</strong><br>Opening in a new tab...`;
+                outputDiv.style.display = 'block';
+
+                // Add the footnotes based on conditions
+                let footnote = '';
+
+                if (firstOriginalImage) {
+                    if (firstOriginalImage.includes('base64')) {
+                        footnote += '<br><em>* This is a Base64 encoded image attempting to create inline images with binary data. There are no external or internal image links. These will always show as broken images.</em>';
+                    } else {
+						if (firstOriginalImage.includes('data:image/svg')) {
+							if (firstOriginalImage.includes('www.w3.org')) {
+								footnote += '<br><em>* This is an SVG (Scalable Vector Graphics) image that has been hardcoded inline in the html. These can be quite complex, but the assistant is capable of using them to make simple shapes filled with colors and text to serve as proper placeholders. The www.w3.org link is not an external resource, but acts as a sort of declaration to let the html know that it should read this line of code as an SVG.</em>';
+							} else {
+								footnote += '<br><em>* This is an SVG (Scalable Vector Graphics) image that has been hardcoded inline in the html. These can be quite complex, but the assistant is capable of using them to make simple shapes filled with colors and text to serve as proper placeholders. There does not seem to be a www.w3.org declaration associated with this SVG, which does not abide by best practices and should be mentioned in your rationales and (if chosen) your follow-up. This could be treated like using a Browser Alert and given no higher than a 4.</em>';
+							}
+						}
+					}
+                    if (firstOriginalImage.includes('via.placeholder.com')) {
+                        footnote += '<br><em>* Placeholder.com is a defunct placeholder website that the assistant has used to properly provide placeholders, but it is likely that they will fail to load without several refreshes.</em>';
+                    }
+                    if (firstOriginalImage.includes('unsplash.com')) {
+                        footnote += '<br><em>* Unsplash is an image library that the assistant attempts to use generic links with tags to source images from, but it does not operate that way and often leads to broken links.</em>';
+                    }
+                    if (firstOriginalImage.includes('mj-wells') || firstOriginalImage.includes('file:///C:')) {
+                        footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
+                    } else {
+                        if (!firstOriginalImage.includes('http') && !firstOriginalImage.startsWith('data:image/')) {
+                            footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
+                        }
+                    }
+                    if (firstOriginalImage.includes('wikimedia') || firstOriginalImage.includes('wikimedia commons')) {
+                        footnote += '<br><em>* Wikimedia Commons is a repository of freely licensed media that the assistant often hallucinates links to or references links that no longer exist. These are usually broken images.</em>';
+                    }
+                }
+
+                outputDiv.innerHTML += footnote;
+
+                const blob = new Blob([modifiedHtml], { type: 'text/html' });
+                const newTabUrl = URL.createObjectURL(blob);
+                window.open(newTabUrl, '_blank');
+            } catch (error) {
+                console.error('Error processing the page:', error.message);
+                outputDiv.className = 'error';
+                outputDiv.textContent = `Failed to process the page: ${error.message}`;
+                outputDiv.style.display = 'block';
+            }
+        }
+
+        // Add keydown event listener for Enter key
+        document.getElementById('urlInput').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                processPage();
+            }
+        });
+
+        // Dark Mode Toggle Logic
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+
+            // Save the preference to localStorage
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // On page load, check localStorage for dark mode preference
+        window.addEventListener('load', function() {
+            const darkModePreference = localStorage.getItem('darkMode');
+
+            if (darkModePreference === 'enabled') {
+                document.body.classList.add('dark-mode');
+            } else if (darkModePreference === 'disabled') {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
