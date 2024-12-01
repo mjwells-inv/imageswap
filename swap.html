@@ -257,31 +257,31 @@
                 }
             });
 			
-			    // Replace image links in JavaScript arrays or variables
-				doc.querySelectorAll('script').forEach(script => {
-					if (script.innerHTML) {
-						script.innerHTML = script.innerHTML.replace(
-							/(https?:\/\/.*?\.(?:jpg|jpeg|png|gif|webp))/gi,
-							(match) => {
-								if (!firstOriginalImage) {
-									firstOriginalImage = match; // Capture the first image link in JS
-								}
-								return `https://picsum.photos/800/600?random=${Math.random()}`;
-							}
-						);
-
-						// Additional logic to replace image URLs in JavaScript arrays
-						script.innerHTML = script.innerHTML.replace(
-							/(kittenImages\s*=\s*\[)([^\]]+)(\])/gi,
-							(match, start, links, end) => {
-								const newLinks = links.split(',')
-									.map(() => `"https://picsum.photos/800/600?random=${Math.random()}"`)
-									.join(', ');
-								return `${start}${newLinks}${end}`;
-							}
-						);
+		// Replace image links in JavaScript arrays or variables
+		doc.querySelectorAll('script').forEach(script => {
+			if (script.innerHTML) {
+				script.innerHTML = script.innerHTML.replace(
+					/(https?:\/\/.*?\.(?:jpg|jpeg|png|gif|webp))/gi,
+					(match) => {
+						if (!firstOriginalImage) {
+							firstOriginalImage = match; // Capture the first image link in JS
+						}
+						return `https://picsum.photos/800/600?random=${Math.random()}`;
 					}
-				});
+				);
+
+				// Additional logic to replace image URLs in JavaScript arrays
+				script.innerHTML = script.innerHTML.replace(
+					/(kittenImages\s*=\s*\[)([^\]]+)(\])/gi,
+					(match, start, links, end) => {
+						const newLinks = links.split(',')
+							.map(() => `"https://picsum.photos/800/600?random=${Math.random()}"`)
+							.join(', ');
+						return `${start}${newLinks}${end}`;
+					}
+				);
+			}
+		});
 
             return { modifiedHtml: doc.documentElement.outerHTML, firstOriginalImage };
         }
@@ -320,7 +320,7 @@
                         footnote += '<br><em>* Placeholder.com is a defunct placeholder website that the assistant has used to properly provide placeholders, but it is likely that they will fail to load without several refreshes.</em>';
                     } else {
 						if (firstOriginalImage.includes('place')) {
-							footnote += '<br><em>* Websites with the word /"place/" in their URL generally tend to be placeholder sites. Whether these links work or not is a toss up, since many of these sites exist, but many do not stay up for long. Examples include placekitten.com, placecat.com, and placebacon.com.</em>';
+							footnote += '<br><em>* Websites with the word \"place\" in their URL generally tend to be placeholder sites. Whether these links work or not is a toss up, since many of these sites exist, but many do not stay up for long. Examples include placekitten.com, placecat.com, and placebacon.com.</em>';
 						}
 					}
                     if (firstOriginalImage.includes('unsplash.com')) {
