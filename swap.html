@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="UTF-8">
   <title>Via Placeholder Replacer</title>
   <link rel="icon" type="image/x-icon" href="favicon.png">
@@ -174,11 +172,11 @@
     }
   </style>
 </head>
-<body>
+<body data-new-gr-c-s-check-loaded="14.1209.0" data-gr-ext-installed="">
   <button id="darkModeToggle">Toggle Dark Mode</button>
   <h1>Via Placeholder Replacer v1.7</h1>
   <p>Enter a URL to replace its image links with random placeholders:</p>
-  <input type="url" id="urlInput" placeholder="Enter a valid URL" required>
+  <input type="url" id="urlInput" placeholder="Enter a valid URL" required="">
   <button onclick="processPage()">Process</button>
   <div id="output"></div>
 
@@ -203,6 +201,16 @@
       const doc = parser.parseFromString(htmlContent, 'text/html');
 
       let firstOriginalImage = null;
+	  
+		// Replace <img> src attributes
+		doc.querySelectorAll('img').forEach((img, index) => {
+			if (index === 0) {
+				firstOriginalImage = img.src; // Capture the first original image link
+			}
+			const width = img.getAttribute('width') || 800;
+			const height = img.getAttribute('height') || 600;
+			img.src = `https://picsum.photos/${width}/${height}?random=${Math.random()}`;
+		});
 
       // Attributes that may contain image URLs
       const imageAttributes = ['src', 'data-src', 'data-lazy-src', 'srcset', 'data-srcset', 'data-background', 'data-bg'];
@@ -285,6 +293,35 @@
           );
         }
       });
+            // Replace background-image URLs in <style> tags
+            doc.querySelectorAll('style').forEach(styleTag => {
+                if (styleTag.innerHTML) {
+                    styleTag.innerHTML = styleTag.innerHTML.replace(
+                        /background(?:-image)?\s*:[^;]*url\((['"]?)(.*?)\1\)[^;]*;/gi,
+                        (match, quote, url) => {
+                            if (!firstOriginalImage) {
+                                firstOriginalImage = url; // Capture the first style background image link
+                            }
+                            return `background: url(https://picsum.photos/1920/1080?random=${Math.random()});`;
+                        }
+                    );
+                }
+            });
+
+            // Replace image links in JavaScript objects or variables
+            doc.querySelectorAll('script').forEach(script => {
+                if (script.innerHTML) {
+                    script.innerHTML = script.innerHTML.replace(
+                        /(https?:\/\/.*?\.(?:jpg|jpeg|png|gif|webp))/gi,
+                        (match) => {
+                            if (!firstOriginalImage) {
+                                firstOriginalImage = match; // Capture the first image link in JS
+                            }
+                            return `https://picsum.photos/800/600?random=${Math.random()}`;
+                        }
+                    );
+                }
+            });
 
       // Handle Base64 and SVG data URIs in attributes and styles
       doc.querySelectorAll('*').forEach(el => {
@@ -414,5 +451,6 @@
       }
     });
   </script>
-</body>
-</html>
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
