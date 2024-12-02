@@ -337,6 +337,9 @@
 					if (firstOriginalImage.includes('ibb.co') || firstOriginalImage.includes('imgbb')) {
                         footnote += '<br><em>* ImgBB is a free image hosting service similar to imgur. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images.</em>';
                     }
+					if (firstOriginalImage.includes('imgur') || firstOriginalImage.includes('imgbb')) {
+                        footnote += '<br><em>* Imgur is a free image hosting service. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images.</em>';
+                    }
                 }
 
                 outputDiv.innerHTML += footnote;
