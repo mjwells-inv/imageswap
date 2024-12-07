@@ -409,9 +409,12 @@ async function replaceImageLinks(htmlContent, baseUrl) {
           if (firstOriginalImage.includes('imgur')) {
             footnote += '<br><em>* Imgur is a free image hosting service. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images.</em>';
           }
-	      if (firstOriginalImage.includes('mjwells') || firstOriginalImage.includes('file:///C:')) {
-	        footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
-	      }
+	  if (firstOriginalImage.includes('mjwells') || firstOriginalImage.includes('file:///C:')) {
+	    footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
+	  }
+	  if (firstOriginalImage.includes('api')) {
+            footnote += '<br><em>* The assistant is using an API (Application Programming Interface), which leverages functions and data on an external site, usually through the use of a key. Not all APIs require keys, but when they do the assistant will generally provider a placeholder that is meant to be replaced with an actual key. In these cases the API will not function properly and should be considered a placeholder.</em>';
+          }
         }
 
         outputDiv.innerHTML += footnote;
