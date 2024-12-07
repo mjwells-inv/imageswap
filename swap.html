@@ -402,9 +402,9 @@ async function replaceImageLinks(htmlContent, baseUrl) {
           if (firstOriginalImage.includes('imgur')) {
             footnote += '<br><em>* Imgur is a free image hosting service. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images.</em>';
           }
-		  if (firstOriginalImage.includes('mj-wells') || firstOriginalImage.includes('file:///C:')) {
-			footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
-		  }
+	  if (firstOriginalImage.includes('mjwells') || firstOriginalImage.includes('file:///C:')) {
+	    footnote += '<br><em>* This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken images.</em>';
+	  }
         }
 
         outputDiv.innerHTML += footnote;
