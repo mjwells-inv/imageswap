@@ -432,6 +432,9 @@
           if (firstOriginalImage.includes('api')) {
             footnote += '<br><em>* The assistant is using an API (Application Programming Interface), which leverages functions and data on an external server, usually through the use of a key. Not all APIs require keys, but when they do the assistant will generally provider a placeholder that is meant to be replaced with an actual key. In these cases the API will not function properly and should be considered a placeholder.</em>';
           }
+          if (firstOriginalImage.includes('twemoji')) {
+            footnote += '<br><em>* Twemoji was an open source library of emoji provided by Twitter... so you can probably guess who... I mean... what happened to it. A fork still exists on Github and is maintained by a former employee, but the site and any easy linking to it no longer exists.</em>';
+          }
         }
 
         outputDiv.innerHTML += footnote;
