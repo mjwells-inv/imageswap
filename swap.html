@@ -435,6 +435,9 @@
           if (firstOriginalImage.includes('twemoji')) {
             footnote += '<br><em>* Twemoji was an open source library of emoji provided by Twitter... so you can probably guess who... I mean... what happened to it. A fork still exists on Github and is maintained by a former employee, but the site and any easy linking to it no longer exists.</em>';
           }
+          if (firstOriginalImage.includes('pravatar')) {
+            footnote += '<br><em>* Pravatar is a placeholder site that specializes in random avatar images. These would mostly be appropriate when the webpage calls for images of people.</em>';
+          }
         }
 
         outputDiv.innerHTML += footnote;
