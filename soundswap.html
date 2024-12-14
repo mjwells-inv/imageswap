@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Link Replacer</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      background: linear-gradient(145deg, #f7f1e3, #e9d8a6, #f0e6cc);
+      color: #2c3e50;
+      text-align: center;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #8a6d3b;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      color: #5a4631;
+    }
+
+    /* Form Styling */
+    input[type="url"] {
+      width: 60%;
+      max-width: 500px;
+      padding: 10px;
+      border: 1px solid #d4c6a7;
+      border-radius: 20px;
+      font-size: 1em;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    input[type="url"]:focus {
+      border: 2px solid #8a6d3b;
+      background: #fefae0;
+      color: #2c3e50;
+    }
+
+    .toggle-group {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 15px;
+      font-size: 1em;
+      color: #5a4631;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      color: #fff;
+      background: #8a6d3b;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #735837;
+      transform: scale(1.1);
+    }
+
+    /* Output Container */
+    #output {
+      margin-top: 20px;
+      padding: 15px 25px;
+      max-width: 600px;
+      background: #e9d8a6;
+      color: #5a4631;
+      border-radius: 15px;
+      border: 1px solid #d4c6a7;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      display: none; /* Hidden initially */
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      text-align: center;
+    }
+
+    #output.success {
+      border: 2px solid #4caf50;
+    }
+
+    #output.error {
+      border: 2px solid #e74c3c;
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background: linear-gradient(145deg, #2c3e50, #34495e, #22313f);
+      color: #ecf0f1;
+    }
+
+    /* Glowing Blue Neon for h1 in Dark Mode */
+    body.dark-mode h1 {
+      color: #0ff; 
+      text-shadow:
+        0 0 5px #0ff,
+        0 0 55px #0ff,
+        0 0 75px #0ff;
+    }
+
+    /* Add '... After Dark' in pink neon */
+    body.dark-mode h1::after {
+      content: '... After Dark';
+      color: #f0f; 
+      margin-left: 10px;
+      text-shadow:
+        0 0 5px #f0f,
+        0 0 55px #f0f,
+        0 0 75px #f0f;
+    }
+
+    body.dark-mode p {
+      color: #bdc3c7;
+    }
+
+    body.dark-mode .toggle-group label {
+      color: #bdc3c7;
+    }
+
+    body.dark-mode input[type="url"] {
+      background: #3b3b3b;
+      border: 1px solid #555;
+      color: #ecf0f1;
+    }
+
+    body.dark-mode input[type="url"]:focus {
+      border: 2px solid #8a6d3b;
+      background: #2c3e50;
+      color: #ecf0f1;
+    }
+
+    body.dark-mode button {
+      background: #8a6d3b;
+      color: #fff;
+    }
+
+    body.dark-mode button:hover {
+      background: #735837;
+    }
+
+    body.dark-mode #output {
+      background: #34495e;
+      color: #ecf0f1;
+      border: 1px solid #555;
+    }
+
+    /* Dark Mode Toggle Button */
+    #darkModeToggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 10px;
+      font-size: 1em;
+      background: #8a6d3b;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    body.dark-mode #darkModeToggle {
+      background: #8a6d3b;
+      color: #fff;
+    }
+
+    /* Image Swap Button (top-left corner) */
+    #imageSwapButton {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 10px;
+      font-size: 1em;
+      background: #8a6d3b;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      line-height: 20px;
+    }
+
+    #imageSwapButton:hover {
+      background: #735837;
+    }
+
+    body.dark-mode #imageSwapButton {
+      background: #8a6d3b;
+      color: #fff;
+    }
+
+    /* Music Notes Banner */
+    .music-notes-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: -1;
+      opacity: 0.05;
+      pointer-events: none; /* Prevent interference with clicks */
+      overflow: hidden;
+    }
+
+    .music-notes-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      animation: colorCycle 10s infinite linear;
+    }
+
+    /* Color cycling animation */
+    @keyframes colorCycle {
+      0% {
+        filter: hue-rotate(0deg);
+      }
+      100% {
+        filter: hue-rotate(360deg);
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="music-notes-banner">
+    <img src="https://pngimg.com/uploads/music_notes/music_notes_PNG33.png" alt="Music Notes">
+  </div>
+  <a id="imageSwapButton" href="https://mjwells-inv.github.io/imageswap/swap.html" target="_self">Image Swap</a>
+  <button id="darkModeToggle">Toggle Dark Mode</button>
+  <h1>Audio Link Replacer</h1>
+  <p>Enter a URL to replace its audio links:</p>
+  <input type="url" id="urlInput" placeholder="Enter a valid URL" required="">
+  <div class="toggle-group">
+    <label><input type="radio" name="soundType" value="short" checked=""> Short Sound</label>
+    <label><input type="radio" name="soundType" value="long"> Long Sound</label>
+  </div>
+  <button onclick="processPage()">Process</button>
+  <div id="output"></div>
+
+  <script>
+    function escapeHTML(html) {
+      return html
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    async function processPage() {
+      const urlInput = document.getElementById('urlInput').value;
+      const outputDiv = document.getElementById('output');
+
+      // Determine the replacement audio based on the selected option
+      const soundType = document.querySelector('input[name="soundType"]:checked').value;
+      const replacementAudio = soundType === 'short'
+        ? "https://commondatastorage.googleapis.com/codeskulptor-assets/week7-bounce.m4a"
+        : "https://filesamples.com/samples/audio/m4a/sample2.m4a";
+
+      if (!urlInput) {
+        outputDiv.textContent = "Please enter a valid URL.";
+        outputDiv.style.display = "block";
+        outputDiv.className = "error";
+        return;
+      }
+
+      try {
+        // Fetch the page content using a CORS proxy
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`);
+        if (!response.ok) throw new Error(`Failed to fetch the page. Status: ${response.status}`);
+
+        const data = await response.json();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, 'text/html');
+
+        let firstAudioLink = null;
+
+        // Step 1: Extract and replace audio links in <audio> and <a> tags
+        const audioLinks = doc.querySelectorAll('audio, a[href$=".mp3"], a[href$=".wav"], a[href$=".m4a"]');
+        if (audioLinks.length > 0) {
+          const firstLink = audioLinks[0].tagName === 'A' ? audioLinks[0].href : audioLinks[0].src;
+          firstAudioLink = firstLink;
+        }
+
+        // Step 2: Check for audio references in scripts if none found yet
+        const scriptTags = doc.querySelectorAll('script');
+
+        if (!firstAudioLink) {
+          for (const script of scriptTags) {
+            const scriptContent = script.innerHTML;
+
+            // Check if there's a new Audio(...) call
+            let match = scriptContent.match(/new Audio\((['"`])(.*?\.(?:mp3|wav|m4a))\1\)/);
+            if (match && match[2]) {
+              firstAudioLink = match[2];
+              break;
+            }
+
+            // If no new Audio(...) found, try a generic pattern:
+            match = scriptContent.match(/(['"])([^'"]*\.(?:mp3|wav|m4a))\1/);
+            if (match && match[2]) {
+              firstAudioLink = match[2];
+              break;
+            }
+          }
+        }
+
+        // Now do replacements
+        audioLinks.forEach(el => {
+          if (el.tagName === 'A') {
+            el.href = replacementAudio;
+          } else if (el.tagName === 'AUDIO') {
+            el.src = replacementAudio;
+          }
+        });
+
+        scriptTags.forEach(script => {
+          let scriptContent = script.innerHTML;
+
+          // Replace occurrences inside new Audio(...) for single/double quotes
+          scriptContent = scriptContent.replace(/new Audio\(['"]([^'"]*\.(?:mp3|wav|m4a))['"]\)/g, `new Audio('${replacementAudio}')`);
+          // Replace template literals
+          scriptContent = scriptContent.replace(/new Audio\(`([^`]*\.(?:mp3|wav|m4a))`\)/g, `new Audio('${replacementAudio}')`);
+
+          // Replace any standalone audio strings
+          scriptContent = scriptContent.replace(/(['"])([^'"]*\.(?:mp3|wav|m4a))\1/g, `'${replacementAudio}'`);
+
+          script.innerHTML = scriptContent;
+        });
+
+        const modifiedHtml = doc.documentElement.outerHTML;
+        const blob = new Blob([modifiedHtml], { type: 'text/html' });
+        const newTabUrl = URL.createObjectURL(blob);
+
+        outputDiv.innerHTML = `Audio links replaced successfully!
+First audio link found: <strong>${escapeHTML(firstAudioLink || "None found")}</strong>
+Check the new tab for the modified page.`;
+
+        // Add the footnote logic from the snippet, adapted for firstAudioLink
+        let footnote = '';
+        if (firstAudioLink) {
+          // The following checks are image/placeholder related in the snippet.
+          // We leave them intact as requested, but now they apply to firstAudioLink.
+          if (firstAudioLink.includes('base64')) {
+            footnote += '<br><em>* This is Base64 encoded audio attempting to create inline audio with binary data. There are no external or internal links. These will usually not work and be supplied in the code as a placeholder.</em>';
+          } else {
+            if (firstAudioLink.includes('data:image/svg')) {
+              if (firstAudioLink.includes('www.w3.org')) {
+                footnote += '<br><em>* This is...</em>';
+              } else {
+                footnote += '<br><em>* This is...</em>';
+              }
+            } else {
+              if (firstAudioLink.includes('mj-wells') || firstAudioLink.includes('file:///C:')) {
+                footnote += '<br><em>* This is a locally sourced sound file that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken, but can be considered placeholders.</em>';
+              } else {
+                if (!firstAudioLink.includes('http') && !firstAudioLink.startsWith('data:image/')) {
+                  footnote += '<br><em>* This is a locally sourced sound file that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken, but can be considered placeholders.</em>';
+                }
+              }
+            }
+          }
+          if (firstAudioLink.includes('myinstants.com')) {
+            footnote += '<br><em>* Myinstants.com is an online soundboard that provides buttons users can press to create different sounds. The assistant may attempt to link directly to these.</em>';
+          } else {
+            if (firstAudioLink.includes('place')) {
+              footnote += '<br><em>* Websites with the word "place" in their URL generally tend to be placeholder sites... (Text from snippet)</em>';
+            }
+          }
+          if (firstAudioLink.includes('unsplash.com')) {
+            footnote += '<br><em>* Unsplash is an image library... (Text from snippet)</em>';
+          }
+          if (firstAudioLink.includes('wikimedia')) {
+            footnote += '<br><em>* Wikimedia Commons is a repository of freely licensed media that the assistant often hallucinates links to or references links that no longer exist. These are usually broken.</em>';
+          }
+          if (firstAudioLink.includes('ibb.co') || firstAudioLink.includes('imgbb')) {
+            footnote += '<br><em>* ImgBB is a free image hosting service... (Text from snippet)</em>';
+          }
+          if (firstAudioLink.includes('imgur')) {
+            footnote += '<br><em>* Imgur is a free image hosting service... (Text from snippet)</em>';
+          }
+          if (firstAudioLink.includes('mjwells') || firstAudioLink.includes('file:///C:')) {
+            footnote += '<br><em>* This is a locally sourced sound file that the webpage expects to be uploaded into a local directory within the website\'s directory structure. These will always be broken, but can be considered placeholders.</em>';
+          }
+          if (firstAudioLink.includes('api')) {
+            footnote += '<br><em>* The assistant is using an API (Application Programming Interface), which leverages functions and data on an external server, usually through the use of a key. Not all APIs require keys, but when they do the assistant will generally provider a placeholder that is meant to be replaced with an actual key. In these cases the API will not function properly and should be considered a placeholder.</em>';
+          }
+          if (firstAudioLink.includes('twemoji')) {
+            footnote += '<br><em>* Twemoji was an open source library of emoji provided by Twitter... (Text from snippet)</em>';
+          }
+          if (firstAudioLink.includes('pravatar')) {
+            footnote += '<br><em>* Pravatar is a placeholder site that specializes in random avatar images... (Text from snippet)</em>';
+          }
+        }
+
+        outputDiv.innerHTML += footnote;
+        outputDiv.style.display = "block";
+        outputDiv.className = "success";
+
+        window.open(newTabUrl, '_blank');
+
+      } catch (error) {
+        outputDiv.textContent = `Error: ${error.message}`;
+        outputDiv.style.display = "block";
+        outputDiv.className = "error";
+      }
+    }
+
+    // Dark Mode Toggle Logic
+    document.getElementById('darkModeToggle').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      // Save the preference to localStorage
+      if (document.body.classList.contains('dark-mode')) {
+        localStorage.setItem('darkMode', 'enabled');
+      } else {
+        localStorage.setItem('darkMode', 'disabled');
+      }
+    });
+
+    // On page load, check localStorage for dark mode preference
+    window.addEventListener('load', function() {
+      const darkModePreference = localStorage.getItem('darkMode');
+      if (darkModePreference === 'enabled') {
+        document.body.classList.add('dark-mode');
+      } else if (darkModePreference === 'disabled') {
+        document.body.classList.remove('dark-mode');
+      }
+    });
+  </script>
+</body>
+</html>
