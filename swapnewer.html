@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Webpages Image Replacer</title>
+	<link rel="icon" type="image/x-icon" href="favicon.png">
+	 <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const titles = [
+                "Pixel Perfect",
+                "The Replacening",
+                "Replace Harder",
+                "Reloaded",
+                "A New Patch",
+                "Judgment JPEG",
+                "PNG & Beyond",
+                "Now With More JPEG",
+                "The Uncanny Patch",
+                "The Files Awaken",
+                "The Replacer Strikes Back",
+				"Rise of the PNGs",
+				"Cache Me If You Can",
+				"Now with 200% More JPEG",
+				"Lost in Compression",
+				"Revenge of the GIF",
+				"2 Fast 2 Replacious",
+            ];
+
+            // Title randomization just for fun
+            const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+            document.getElementById("title").textContent = randomTitle;
+        });
+    </script>
+	
+    <style>
+	
+		@import url('https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap');
+		@import url('https://fonts.googleapis.com/css2?family=Exo:wght@900&display=swap');
+		
+		html {
+			background-color: #111527;
+		}
+		
+		*, *::before, *::after {
+			box-sizing: border-box;
+		}
+		
+		body, html {
+		  height: 100%;
+
+		  margin: 0;
+		  line-height: 1.6;
+		  max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+		}
+        
+		.lines {
+			position: absolute;
+			top: 90px;
+			left: 0;
+			width: 100%;
+			height: 4.2em;
+			z-index: 1000;
+			background: linear-gradient(rgba(89, 193, 254, 0.2) 20%, 
+										#59c1fe 40%, 
+										#59c1fe 60%, 
+										rgba(89, 193, 254, 0.2) 80%);
+			background-size: 100% 10px; /* Ensures proper line spacing */
+			box-shadow: 0 0 1em rgba(89, 193, 254, 0.4);
+			z-index: -1; /* Places it behind other elements */
+		}
+
+
+		h1 {
+			text-align: center;
+			white-space: nowrap; /* Prevents wrapping */
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%) skew(-15deg); /* This keeps both translation & skew */
+			width: max-content; /* Ensures it only takes the necessary width */
+			font-family: 'Exo', sans-serif;
+			font-size: 7em;
+			letter-spacing: 0.03em;
+			margin: 0;
+			z-index: 1001;
+		  
+		  &::after {
+			content: '';
+			position: absolute;
+			top: -0.1em;
+			right: 0.05em;
+			width: 0.4em;
+			height: 0.4em;
+			background: 
+			  radial-gradient(white 3%, rgba(white, 0.3) 15%, rgba(white, 0.05) 60%, transparent 80%),
+			  radial-gradient(rgba(white, 0.2) 50%, transparent 60%) 50% 50% / 5% 100%,
+			  radial-gradient(rgba(white, 0.2) 50%, transparent 60%) 50% 50% / 70% 5%;
+			background-repeat: no-repeat;
+		  }
+		  
+		  span:first-child {
+			display: block;
+			text-shadow: 0 0 0.1em #8ba2d0, 0 0 0.2em black,  0 0 5em #165ff3;
+			-webkit-text-stroke: 0.06em rgba(black, 0.5);
+		  }
+		  
+		  span:last-child {
+			position: absolute;
+			left: 0;
+			top: 0;
+			background-image: linear-gradient(#032d50 25%, #00a1ef 35%, white 50%, #20125f 50%, #8313e7 55%, #ff61af 75%);
+			-webkit-text-stroke: 0.01em #94a0b9;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		  }
+		}
+		
+		h1::before {
+			content: '';
+			position: absolute;
+			top: -20%; /* Adjusts glow positioning */
+			left: -5%;
+			width: 110%;
+			height: 150%;
+			background: radial-gradient(circle, rgba(89, 193, 254, 0.3) 30%, rgba(89, 193, 254, 0) 70%);
+			filter: blur(15px); /* Softens the glow */
+			z-index: -1; /* Places it behind the text */
+			border-radius: 50%; /* Ensures smooth gradient fade */
+			pointer-events: none; /* Prevents interaction issues */
+		}
+
+		h2 {
+			text-align: center;
+			position: relative;
+			top: 180px;
+			font-family: 'Mr Dafoe';
+			font-size: 6em;
+			color: white;
+			text-shadow: 0 0 0.05em #fff, 0 0 0.2em #fe05e1, 0 0 0.3em #fe05e1;
+			transform: rotate(-7deg);
+			left: 50%;
+			transform: translateX(-50%) rotate(-7deg); /* Ensures it's centered while keeping rotation */
+			width: max-content;
+			margin: 0;
+			margin-top: -1.2em;
+			z-index: 1002;
+		}
+        
+        .form-container {
+		    color: white;
+            background-color: #313338;
+            border-radius: 0 8px 8px 8px; /* Top-left corner is 0, others are rounded */
+			position: relative;
+            padding: 20px;
+			margin-top: 180px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+		    color: white;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+		
+        
+        input[type="url"], textarea {
+		    background-color: #313338;
+			color: white;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 200px;
+            font-family: monospace;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 20px;
+            display: none;
+            padding: 10px;
+            background-color: #313338;
+            border-radius: 4px;
+        }
+
+        .success {
+            color: #27ae60;
+            margin-top: 20px;
+            display: none;
+            padding: 10px;
+            background-color: #313338;
+            border-radius: 4px;
+        }
+		
+		.tooltip-keyword {
+		    color: yellow;
+			font-weight: bold;
+			text-decoration: underline;
+			cursor: help;
+		}
+
+        .tab-container {
+		    position: relative;
+			top: 180px;
+        }
+
+        .tab {
+		    color: #75756d;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1e1f22;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        }
+
+        .tab.active {
+		    color: white;
+            background-color: #313338;
+            border-top: 2px solid #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .proxy-select {
+            margin-bottom: 15px;
+        }
+		
+		#proxySelector {
+		    color: white;
+			background-color: #f0f0f0; /* or your preferred background color */
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+		
+		.preview-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 10px;
+		}
+
+        .preview-container {
+		    color: white;
+            display: none;
+            margin-top: 2px;
+			margin-bottom: 20px;
+            border-radius: 4px;
+            padding: 20px;
+            background-color: #313338;
+        }
+		
+		.preview-header {
+		  display: flex;
+		  justify-content: space-between;
+		  align-items: center;
+		  margin-bottom: 10px;
+		}
+
+        .preview-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .open-link {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-decoration: underline;
+            color: #3498db;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+	<div class="lines"></div>
+	<h1>
+	  <span>IW IMAGE REPLACER 2</span>
+	  <span>IW IMAGE REPLACER 2</span>
+	</h1>
+	<h2 id="title">The Replacening</h2>
+	<br>
+	<br>
+	<div class="grid"></div>
+    <div class="tab-container">
+        <div class="tab active" data-tab="urlTab">URL Method</div>
+        <div class="tab" data-tab="htmlTab">HTML Method</div>
+    </div>
+
+    <div class="tab-content active" id="urlTab">
+        <div class="form-container">
+            <div class="proxy-select">
+                <label for="proxySelector">Select Proxy (if one fails, try another):</label>
+                <select id="proxySelector" style="padding: 8px; width: 100%; margin-top: 5px; background-color: #313338;">
+                    <option value="allorigins">AllOrigins (default)</option>
+                    <option value="corsproxy">CORS Proxy</option>
+                    <option value="corsanywhere">CORS Anywhere</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="websiteUrl">Enter Website URL:</label>
+                <input type="url" id="websiteUrl" placeholder="Paste full completion URL here..." required>
+            </div>
+            
+            <button id="submitUrlBtn">Replace Images</button>
+            
+            <div class="loading" id="loadingIndicatorUrl">
+                <div class="spinner"></div>
+                <p>Fetching website and replacing images...</p>
+            </div>
+            
+            <div class="error" id="errorMessageUrl"></div>
+            <div class="success" id="successMessageUrl"></div>
+        </div>
+        
+		<div class="preview-container" id="previewContainerUrl">
+		  <div class="preview-header">
+			<h3>Preview:</h3>
+			<div class="preview-actions">
+			  <button id="openUrlBtn">Open in New Tab</button>
+			  <button id="downloadUrlBtn">Download HTML</button>
+			</div>
+		  </div>
+		  <iframe id="previewFrameUrl"></iframe>
+		</div>
+	  </div>
+
+    <div class="tab-content" id="htmlTab">
+        <div class="form-container">
+            <div class="form-group">
+                <label for="htmlContent">Paste Website HTML:</label>
+                <textarea id="htmlContent" placeholder="CTRL-U on the completion, CTRL-A to select all, CTRL-C to copy. Then paste here." required></textarea>
+            </div>
+            
+            <button id="submitHtmlBtn">Replace Images</button>
+            
+            <div class="loading" id="loadingIndicatorHtml">
+                <div class="spinner"></div>
+                <p>Processing HTML and replacing images...</p>
+            </div>
+            
+            <div class="error" id="errorMessageHtml"></div>
+            <div class="success" id="successMessageHtml"></div>
+        </div>
+        
+        <div class="preview-container" id="previewContainerHtml">
+            <h3>Preview:</h3>
+            <iframe id="previewFrameHtml"></iframe>
+            <div class="preview-actions">
+                <a id="openHtmlLink" class="open-link" target="_blank">Open in New Tab</a>
+                <button id="downloadHtmlBtn">Download HTML</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+		
+		function attachTooltipListeners() {
+			document.querySelectorAll('.tooltip-keyword').forEach(elem => {
+				elem.addEventListener('mouseenter', function(e) {
+					tooltip.textContent = this.getAttribute('data-tooltip');
+					tooltip.style.display = 'block';
+				});
+				elem.addEventListener('mousemove', function(e) {
+					tooltip.style.left = (e.pageX + 10) + 'px';
+					tooltip.style.top = (e.pageY + 10) + 'px';
+				});
+				elem.addEventListener('mouseleave', function() {
+					tooltip.style.display = 'none';
+				});
+			});
+		}
+
+        // Function to get proxy URL based on selection
+        function getProxyUrl(url) {
+            const proxySelector = document.getElementById('proxySelector').value;
+            
+            switch(proxySelector) {
+                case 'allorigins':
+                    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                case 'corsproxy':
+                    return 'https://corsproxy.io/?' + encodeURIComponent(url);
+                case 'corsanywhere':
+                    return 'https://cors-anywhere.herokuapp.com/' + url;
+                default:
+                    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+            }
+        }
+
+        // Function to process HTML and replace images
+		function processHTML(htmlContent) {
+			// Create a DOM parser to parse the HTML
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(htmlContent, 'text/html');
+			
+			// Create an array to track replaced images
+			const replacedImages = [];
+			
+			// Process all image elements
+			const images = doc.querySelectorAll('img');
+			images.forEach(img => {
+				const originalSrc = img.src;
+				
+				// Get original width and height
+				let width = img.width || img.getAttribute('width') || 300;
+				let height = img.height || img.getAttribute('height') || 200;
+				
+				// Ensure width and height are reasonable
+				width = width > 0 ? width : 300;
+				height = height > 0 ? height : 200;
+				
+				// Remove any leading px and convert to numbers
+				if (typeof width === 'string') width = parseInt(width.replace('px', ''));
+				if (typeof height === 'string') height = parseInt(height.replace('px', ''));
+				
+				// Generate a random seed
+				const randomSeed = Math.random();
+				
+				// Replace with picsum URL
+				img.src = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+				
+				// Add to replaced images list
+				replacedImages.push({
+					type: 'img',
+					originalSrc: originalSrc,
+					newSrc: img.src
+				});
+				
+				// Remove srcset if present
+				img.removeAttribute('srcset');
+				img.removeAttribute('data-src');
+				img.removeAttribute('data-srcset');
+			});
+			
+			// Process all elements with background or background-image in style
+			const allElements = doc.querySelectorAll('*');
+			allElements.forEach(el => {
+				const style = el.getAttribute('style');
+				if (style && (style.includes('background:') || style.includes('background-image:'))) {
+					// Track original style
+					const originalStyle = style;
+					
+					// Estimate the size based on element dimensions or use defaults
+					let width = el.offsetWidth || 300;
+					let height = el.offsetHeight || 200;
+					
+					const randomSeed = Math.random();
+					
+					// Create a temporary element to modify the style
+					const tempEl = document.createElement('div');
+					tempEl.setAttribute('style', style);
+					
+					let newSrc = '';
+					// Update the style to replace the URL but keep other properties
+					if (tempEl.style.backgroundImage) {
+						// Extract original URL
+						const originalUrl = tempEl.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+						
+						newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+						el.style.backgroundImage = `url('${newSrc}')`;
+						
+						// Add to replaced images list if URL was found
+						if (originalUrl && originalUrl[1]) {
+							replacedImages.push({
+								type: 'backgroundImage',
+								element: el.tagName,
+								originalSrc: originalUrl[1],
+								newSrc: newSrc
+							});
+						}
+					} else if (tempEl.style.background) {
+						// For shorthand background property, try to preserve other values
+						const backgroundValue = tempEl.style.background;
+						const originalUrl = backgroundValue.match(/url\(['"]?([^'"]+)['"]?\)/);
+						
+						newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+						el.style.background = backgroundValue.replace(/url\(['"]?([^'"]+)['"]?\)/g, 
+							`url('${newSrc}')`);
+						
+						// Add to replaced images list if URL was found
+						if (originalUrl && originalUrl[1]) {
+							replacedImages.push({
+								type: 'background',
+								element: el.tagName,
+								originalSrc: originalUrl[1],
+								newSrc: newSrc
+							});
+						}
+					}
+				}
+			});
+			
+			// Process inline CSS with background images
+			const styleElements = doc.querySelectorAll('style');
+			styleElements.forEach(styleEl => {
+				if (styleEl.textContent) {
+					let cssText = styleEl.textContent;
+					
+					// Find all URL matches in the CSS
+					const urlMatches = cssText.match(/background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/g) || [];
+					
+					// Updated regex to catch both background: url() and background-image: url() patterns
+					const bgPattern = /background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/g;
+					
+					cssText = cssText.replace(bgPattern, (match) => {
+						// Default sizes when we can't determine actual size
+						const width = 400;
+						const height = 300;
+						const randomSeed = Math.random();
+						
+						// Extract original URL
+						const originalUrl = match.match(/url\(['"]?([^'"]+)['"]?\)/);
+						const newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+						
+						// Add to replaced images list if URL was found
+						if (originalUrl && originalUrl[1]) {
+							replacedImages.push({
+								type: 'css',
+								originalSrc: originalUrl[1],
+								newSrc: newSrc
+							});
+						}
+						
+						// Keep the original property (background or background-image) but replace the URL
+						return match.replace(/url\(['"]?([^'"]+)['"]?\)/g, 
+							`url('${newSrc}')`);
+					});
+					
+					styleEl.textContent = cssText;
+				}
+			});
+			
+			// Find all base64 images in any attribute or style and replace them
+			const allNodes = document.createNodeIterator(doc.documentElement, NodeFilter.SHOW_ELEMENT);
+			let currentNode;
+			while (currentNode = allNodes.nextNode()) {
+				const attributes = currentNode.attributes;
+				if (!attributes) continue;
+				
+				for (let i = 0; i < attributes.length; i++) {
+					const attr = attributes[i];
+					if (attr.value.includes('data:image')) {
+						// Track original value
+						const originalValue = attr.value;
+						
+						// Default sizes for base64 images
+						const width = 300;
+						const height = 200;
+						const randomSeed = Math.random();
+						
+						// Create a new value
+						const newValue = attr.value.replace(/data:image\/[^;]+;base64,[^'")\s]+/g, 
+							`https://picsum.photos/${width}/${height}?random=${randomSeed}`);
+						
+						// Only add to replaced images list if something changed
+						if (newValue !== originalValue) {
+							replacedImages.push({
+								type: 'base64',
+								element: currentNode.tagName,
+								attribute: attr.name
+							});
+						}
+						
+						attr.value = newValue;
+					}
+				}
+			}
+			
+			// Get the modified HTML
+			return { 
+				html: doc.documentElement.outerHTML,
+				replacedImages: replacedImages 
+			};
+		}
+
+        // Function to create blob URL from HTML
+        function createBlobUrl(html) {
+            const blob = new Blob([html], { type: 'text/html' });
+            return URL.createObjectURL(blob);
+        }
+
+        // Function to download HTML
+        function downloadHTML(html, filename) {
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename || 'modified-page.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+		// URL method submit handler
+		document.getElementById('submitUrlBtn').addEventListener('click', async function() {
+			const url = document.getElementById('websiteUrl').value.trim();
+			const loadingIndicator = document.getElementById('loadingIndicatorUrl');
+			const errorMessage = document.getElementById('errorMessageUrl');
+			const successMessage = document.getElementById('successMessageUrl');
+			const previewContainer = document.getElementById('previewContainerUrl');
+			const previewFrame = document.getElementById('previewFrameUrl');
+			const openLink = document.getElementById('openUrlBtn');
+
+			
+			// Reset display
+			errorMessage.style.display = 'none';
+			successMessage.style.display = 'none';
+			previewContainer.style.display = 'none';
+			
+			if (!url) {
+				errorMessage.textContent = 'Please enter a valid URL';
+				errorMessage.style.display = 'block';
+				return;
+			}
+			
+			// Show loading indicator
+			loadingIndicator.style.display = 'block';
+			
+			try {
+				// Use the selected proxy to fetch the website content
+				const proxyUrl = getProxyUrl(url);
+				
+				const response = await fetch(proxyUrl);
+				
+				if (!response.ok) {
+					throw new Error(`Failed to fetch the website (Status: ${response.status})`);
+				}
+				
+				let htmlContent = await response.text();
+				
+				// Process the HTML content
+				const { html: modifiedHtml, replacedImages } = processHTML(htmlContent);
+				
+				// Create blob URL
+				const blobUrl = createBlobUrl(modifiedHtml);
+				
+				openLink.addEventListener('click', () => {
+				  window.open(blobUrl, '_blank');
+				});
+				
+				// Update the preview frame
+				previewFrame.src = blobUrl;
+				
+				// Update open link
+				openLink.href = blobUrl;
+				
+				// Add download handler
+				document.getElementById('downloadUrlBtn').onclick = function() {
+					downloadHTML(modifiedHtml, 'modified-site.html');
+				};
+				
+				// Build success message with replaced images list
+				let successHtml = '<p>The following images were replaced: (mouse over highlights for details)</p>';
+				
+				if (replacedImages.length > 0) {
+					successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+					
+					replacedImages.forEach((img, index) => {
+						let details = '';
+						
+						if (img.type === 'img') {
+							details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)}`;
+						} else if (img.type === 'background' || img.type === 'backgroundImage') {
+							details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)}`;
+						} else if (img.type === 'css') {
+							details = `<strong>CSS background</strong>: ${truncateUrl(img.originalSrc)}`;
+						} else if (img.type === 'base64') {
+							details = `<strong>Base64 image</strong> in ${img.element} ${img.attribute} attribute`;
+						}
+						
+						successHtml += `<li>${details}</li>`;
+						
+						// Limit list size for performance
+						if (index >= 49) {
+							successHtml += `<li>... and ${replacedImages.length - 50} more</li>`;
+							return false; // Break forEach
+						}
+					});
+					
+					successHtml += '</ul>';
+				} else {
+					successHtml += '<p>No images were found to replace.</p>';
+				}
+				
+				// Show success message and preview
+				successMessage.innerHTML = successHtml;
+				successMessage.style.display = 'block';
+				previewContainer.style.display = 'block';
+				
+			} catch (error) {
+				// Show error
+				errorMessage.textContent = `Error: ${error.message}. Try using a different proxy or the HTML method instead.`;
+				errorMessage.style.display = 'block';
+				console.error('Error:', error);
+			} finally {
+				// Hide loading indicator
+				loadingIndicator.style.display = 'none';
+			}
+			// Define the keyword and tooltip text
+			const keywords = [
+			  { keyword: "unsplash", tooltipText: "Unsplash is an image library that the assistant attempts to use generic links with tags to source images from, but it does not operate that way and often leads to broken links. Count these as Link to Any Other Website." },
+			  { keyword: "place", tooltipText: "Websites with the word 'place' in their URL generally tend to be placeholder sites. Whether these links work or not is a toss-up, since many of these sites exist, but many do not stay up for long. Examples include placekitten.com, placecat.com, and placebacon.com. Count these as Link to Image Placeholder Website." },
+			  { keyword: "wikimedia", tooltipText: "Wikimedia Commons is a repository of freely licensed media that the assistant often hallucinates links to or references links that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+			  { keyword: "ibb.co", tooltipText: "ImgBB is a free image hosting service similar to Imgur. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+			  { keyword: "imgbb", tooltipText: "ImgBB is a free image hosting service similar to Imgur. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+			  { keyword: "imgur", tooltipText: "Imgur is a free image hosting service. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+			  { keyword: "mjwells", tooltipText: "This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website's directory structure. These will always be broken images. Count these as URL is Itself a Placeholder." },
+			  { keyword: "api", tooltipText: "The assistant is using an API (Application Programming Interface), which leverages functions and data on an external server, usually through the use of a key. Not all APIs require keys, but when they do the assistant will generally provide a placeholder that is meant to be replaced with an actual key. In these cases the API will not function properly and should be considered a placeholder. Count these as Other." },
+			  { keyword: "twemoji", tooltipText: "Twemoji was an open source library of emoji provided by Twitter... so you can probably guess who... I mean... what happened to it. A fork still exists on Github and is maintained by a former employee, but the site and any easy linking to it no longer exists. Count these as Link to Any Other Website." },
+			  { keyword: "pravatar", tooltipText: "Pravatar is a placeholder site that specializes in random avatar images. These would mostly be appropriate when the webpage calls for images of people. Count these as Link to Image Placeholder Website." },
+			  
+			];
+
+			keywords.forEach(item => {
+			  document.querySelectorAll('.success li').forEach(li => {
+				li.innerHTML = li.innerHTML.replace(new RegExp(item.keyword, 'gi'), match => {
+				  return `<span class="tooltip-keyword" data-tooltip="${item.tooltipText}">${match}</span>`;
+				});
+			  });
+			});
+			attachTooltipListeners();
+
+		});
+
+		// Helper function to truncate long URLs
+		function truncateUrl(url) {
+			if (!url) return 'Unknown URL';
+			if (url.length <= 50) return url;
+			return url.substring(0, 47) + '...';
+		}
+
+		// HTML method submit handler
+		document.getElementById('submitHtmlBtn').addEventListener('click', function() {
+			const htmlContent = document.getElementById('htmlContent').value.trim();
+			const loadingIndicator = document.getElementById('loadingIndicatorHtml');
+			const errorMessage = document.getElementById('errorMessageHtml');
+			const successMessage = document.getElementById('successMessageHtml');
+			const previewContainer = document.getElementById('previewContainerHtml');
+			const previewFrame = document.getElementById('previewFrameHtml');
+			const openLink = document.getElementById('openHtmlLink');
+			
+			// Reset display
+			errorMessage.style.display = 'none';
+			successMessage.style.display = 'none';
+			previewContainer.style.display = 'none';
+			
+			if (!htmlContent) {
+				errorMessage.textContent = 'Please enter HTML content';
+				errorMessage.style.display = 'block';
+				return;
+			}
+			
+			// Show loading indicator
+			loadingIndicator.style.display = 'block';
+			
+			try {
+				// Process the HTML content
+				const { html: modifiedHtml, replacedImages } = processHTML(htmlContent);
+				
+				// Create blob URL
+				const blobUrl = createBlobUrl(modifiedHtml);
+				
+				// Update the preview frame
+				previewFrame.src = blobUrl;
+				
+				// Update open link
+				openLink.href = blobUrl;
+				
+				// Add download handler
+				document.getElementById('downloadHtmlBtn').onclick = function() {
+					downloadHTML(modifiedHtml, 'modified-site.html');
+				};
+				
+				// Build success message with replaced images list
+				let successHtml = '<p>The following images were replaced:</p>';
+				
+				if (replacedImages.length > 0) {
+					successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+					
+					replacedImages.forEach((img, index) => {
+						let details = '';
+						
+						if (img.type === 'img') {
+							details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)}`;
+						} else if (img.type === 'background' || img.type === 'backgroundImage') {
+							details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)}`;
+						} else if (img.type === 'css') {
+							details = `<strong>CSS background</strong>: ${truncateUrl(img.originalSrc)}`;
+						} else if (img.type === 'base64') {
+							details = `<strong>Base64 image</strong> in ${img.element} ${img.attribute} attribute`;
+						}
+						
+						successHtml += `<li>${details}</li>`;
+						
+						// Limit list size for performance
+						if (index >= 49) {
+							successHtml += `<li>... and ${replacedImages.length - 50} more</li>`;
+							return false; // Break forEach
+						}
+					});
+					
+					successHtml += '</ul>';
+				} else {
+					successHtml += '<p>No images were found to replace.</p>';
+				}
+				
+				successHtml += '<p>Preview shown below.</p>';
+				
+				// Show success message and preview
+				successMessage.innerHTML = successHtml;
+				successMessage.style.display = 'block';
+				previewContainer.style.display = 'block';
+				
+			} catch (error) {
+				// Show error
+				errorMessage.textContent = `Error: ${error.message}`;
+				errorMessage.style.display = 'block';
+				console.error('Error:', error);
+			} finally {
+				// Hide loading indicator
+				loadingIndicator.style.display = 'none';
+			}
+		});
+		
+		const tooltip = document.createElement('div');
+		tooltip.id = 'tooltip';
+		tooltip.style.maxWidth = '300px';
+		tooltip.style.position = 'absolute';
+		tooltip.style.background = '#191e26';
+		tooltip.style.color = '#fff';
+		tooltip.style.border = '1px solid #fff';
+		tooltip.style.padding = '2px 6px';
+		tooltip.style.borderRadius = '4px';
+		tooltip.style.fontSize = '14px';
+		tooltip.style.display = 'none';
+		tooltip.style.pointerEvents = 'none'; // so it doesn't interfere with mouse events
+		document.body.appendChild(tooltip);
+
+		// Attach event listeners to each keyword span
+		document.querySelectorAll('.tooltip-keyword').forEach(elem => {
+			elem.addEventListener('mouseenter', function(e) {
+				tooltip.textContent = this.getAttribute('data-tooltip');
+				tooltip.style.display = 'block';
+			});
+			elem.addEventListener('mousemove', function(e) {
+				tooltip.style.left = (e.pageX + 10) + 'px';
+				tooltip.style.top = (e.pageY + 10) + 'px';
+			});
+			elem.addEventListener('mouseleave', function() {
+				tooltip.style.display = 'none';
+			});
+		});
+    </script>
+	<p style="color: white; text-align: center;">
+		<a href="https://mjwells-inv.github.io/imageswap/oldswap.html" style="color: white; text-decoration: underline;">Old Image and Audio Replacer can still be found here.</a>
+	</p>
+</body>
+</html>
