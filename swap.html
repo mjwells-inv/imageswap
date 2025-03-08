@@ -29,7 +29,7 @@
 		"Honey, I Replaced the GIFS!",
 		"Placeholder II: Electric Boogaloo",
 		"Invasion of the Placeholders",
-		"Dude, Where’s My GIF?",
+		"Dude, Where's My GIF?",
 		"No Image for Old Men",
 		"Fellowship of the Links",
 		"Replacement Day",
@@ -40,7 +40,7 @@
 		"Confessions of a Broken Link",
 		"Mission: Replacable",
 		"Patch Me If You Can",
-		"At JPEG’s End",
+		"At JPEG's End",
 		"The PNG That Time Forgot",
 		"Replace/Off",
 		"Silence of the WAVs",
@@ -946,17 +946,109 @@
                 images.forEach(img => {
                     const originalSrc = img.src;
                     
-                    // Get original width and height
-                    let width = img.width || img.getAttribute('width') || 300;
-                    let height = img.height || img.getAttribute('height') || 200;
+                    // Get original width and height with improved detection
+                    let width, height;
                     
-                    // Ensure width and height are reasonable
-                    width = width > 0 ? width : 300;
-                    height = height > 0 ? height : 200;
+                    // Method 1: Try direct attributes first
+                    width = img.getAttribute('width');
+                    height = img.getAttribute('height');
+                    
+                    // Method 2: Check style attribute
+                    if ((!width || !height) && img.getAttribute('style')) {
+                        const style = img.getAttribute('style');
+                        const widthMatch = style.match(/width\s*:\s*(\d+)px/);
+                        const heightMatch = style.match(/height\s*:\s*(\d+)px/);
+                        
+                        if (widthMatch && widthMatch[1]) width = widthMatch[1];
+                        if (heightMatch && heightMatch[1]) height = heightMatch[1];
+                    }
+                    
+                    // Method 3: For images in specific containers, check for known patterns
+                    // Example: Check if image is in a "trainer-grid" or "facilities-grid" or hero section
+                    const parentClasses = img.parentElement?.className || '';
+                    const grandparentClasses = img.parentElement?.parentElement?.className || '';
+                    const imgClasses = img.className || '';
+                    
+                    // Hero image detection (check img class, parent class, and ancestors)
+                    const heroPatterns = ['hero', 'banner', 'header-img', 'cover-img', 'featured-img', 'jumbotron', 'splash'];
+                    const isHeroImage = heroPatterns.some(pattern => 
+                        imgClasses.includes(pattern) || 
+                        parentClasses.includes(pattern) || 
+                        grandparentClasses.includes(pattern) ||
+                        img.closest(`[class*="hero"],[class*="banner"],[id*="hero"],[id*="banner"]`)
+                    );
+                    
+                    if (isHeroImage) {
+                        width = 1600;
+                        height = 900;
+                    } else if (parentClasses.includes('trainer') || img.closest('.trainer-grid, .trainers-grid, .team-grid')) {
+                        width = 600;
+                        height = 600;
+                    } else if (parentClasses.includes('facilities') || img.closest('.facilities-grid, .facility-grid')) {
+                        width = 600;
+                        height = 400;
+                    }
+                    
+                    // Method 4: Check for dimension patterns in the original URL
+                    if ((!width || !height) && originalSrc) {
+                        // Check for common dimension patterns in URLs
+                        const dimensionMatch = originalSrc.match(/(\d+)x(\d+)/);
+                        if (dimensionMatch && dimensionMatch[1] && dimensionMatch[2]) {
+                            width = dimensionMatch[1];
+                            height = dimensionMatch[2];
+                        }
+                    }
+                    
+                    // Method 5: Check for classes that might contain dimension info
+                    const classNames = img.className || '';
+                    const widthClassMatch = classNames.match(/w-(\d+)/);
+                    const heightClassMatch = classNames.match(/h-(\d+)/);
+                    
+                    if (widthClassMatch && widthClassMatch[1]) width = widthClassMatch[1];
+                    if (heightClassMatch && heightClassMatch[1]) height = heightClassMatch[1];
+                    
+                    // Method 6: If image is taking up most of the width of its container, it's likely a hero/banner
+                    const imgStyle = window.getComputedStyle && img.style ? window.getComputedStyle(img) : null;
+                    if (imgStyle && (imgStyle.width === '100%' || imgStyle.width === '100vw' || 
+                                     imgStyle.maxWidth === '100%' || imgStyle.maxWidth === '100vw')) {
+                        // This is likely a full-width image like a hero banner
+                        width = 1600;
+                        height = 900;
+                    }
+                    
+                    // Special case: If it's a large image but height is very small, it might be a divider/separator
+                    if (width > 1000 && height < 100) {
+                        // Adjust for divider images
+                        width = 1600;
+                        height = 200; // Slightly taller than original to make content visible
+                    }
+                    
+                    // Check if it's a large image based on filename patterns
+                    if (originalSrc) {
+                        const largeImgPatterns = ['hero', 'banner', 'header', 'cover', 'featured', 'background', 'bg-'];
+                        if (largeImgPatterns.some(pattern => originalSrc.toLowerCase().includes(pattern))) {
+                            width = Math.max(width, 1200);
+                            height = Math.max(height, 800);
+                        }
+                    }
+                    
+                    // Fallback to defaults or use img properties
+                    width = width || img.width || 300;
+                    height = height || img.height || 200;
                     
                     // Remove any leading px and convert to numbers
-                    if (typeof width === 'string') width = parseInt(width.replace('px', ''));
-                    if (typeof height === 'string') height = parseInt(height.replace('px', ''));
+                    if (typeof width === 'string') width = parseInt(width.replace(/[^\d]/g, ''));
+                    if (typeof height === 'string') height = parseInt(height.replace(/[^\d]/g, ''));
+                    
+                    // Ensure width and height are reasonable
+                    width = (width > 0 && width <= 1200) ? width : 300;
+                    height = (height > 0 && height <= 1200) ? height : 200;
+                    
+                    // If it's a very small icon, make it slightly larger for visibility
+                    if (width < 100 && height < 100) {
+                        width = Math.max(width, 100);
+                        height = Math.max(height, 100);
+                    }
                     
                     // Generate a random seed
                     const randomSeed = Math.random();
@@ -968,7 +1060,8 @@
                     replacedImages.push({
                         type: 'img',
                         originalSrc: originalSrc,
-                        newSrc: img.src
+                        newSrc: img.src,
+                        dimensions: `${width}x${height}`
                     });
                     
                     // Remove srcset if present
@@ -985,23 +1078,110 @@
                         // Track original style
                         const originalStyle = style;
                         
-                        // Estimate the size based on element dimensions or use defaults
-                        let width = el.offsetWidth || 300;
-                        let height = el.offsetHeight || 200;
+                        // Get element dimensions with improved detection for backgrounds
+                        let width = 300;
+                        let height = 200;
+                        
+                        // 1. Get dimensions from inline style if available
+                        if (style.includes('width:') || style.includes('height:')) {
+                            const widthMatch = style.match(/width\s*:\s*(\d+)(px|%|vw|vh|rem|em)?/);
+                            const heightMatch = style.match(/height\s*:\s*(\d+)(px|%|vw|vh|rem|em)?/);
+                            
+                            if (widthMatch && widthMatch[1]) width = parseInt(widthMatch[1]);
+                            if (heightMatch && heightMatch[1]) height = parseInt(heightMatch[1]);
+                        }
+                        
+                        // 2. Check element tag type and classes for common patterns
+                        const tagName = el.tagName.toLowerCase();
+                        const className = el.className || '';
+                        const id = el.id || '';
+                        
+                        // Hero/banner detection
+                        const heroTerms = ['hero', 'banner', 'header', 'jumbo', 'showcase', 'splash', 'featured'];
+                        const isHeroElement = heroTerms.some(term => 
+                            className.toLowerCase().includes(term) || 
+                            id.toLowerCase().includes(term) ||
+                            el.closest(`[class*="hero"],[class*="banner"],[id*="hero"],[id*="banner"]`)
+                        );
+                        
+                        if (isHeroElement) {
+                            width = 1600;
+                            height = 900;
+                        }
+                        
+                        // 3. Element-specific size patterns
+                        else if (tagName === 'header' || tagName === 'section' || tagName === 'div') {
+                            // Header or main content section with background - likely a hero or large section bg
+                            if (el.children.length > 0 && (el.children[0].tagName === 'H1' || el.querySelector('h1, h2'))) {
+                                width = 1600;
+                                height = 900;
+                            }
+                            // Check for full-width elements
+                            else if (style.includes('width: 100%') || 
+                                     style.includes('width:100%') || 
+                                     className.includes('container') || 
+                                     className.includes('wrapper')) {
+                                width = 1600;
+                                height = 900;
+                            }
+                        }
+                        
+                        // 4. For specific layout components
+                        if (className.includes('card') || el.closest('.card')) {
+                            width = 600;
+                            height = 400;
+                        }
+                        
+                        // 5. Check URL for clues about image purpose/size
+                        const tempEl = document.createElement('div');
+                        tempEl.setAttribute('style', style);
+                        let originalUrl = '';
+                        
+                        if (tempEl.style.backgroundImage) {
+                            const urlMatch = tempEl.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            if (urlMatch && urlMatch[1]) originalUrl = urlMatch[1];
+                        } else if (tempEl.style.background) {
+                            const urlMatch = tempEl.style.background.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            if (urlMatch && urlMatch[1]) originalUrl = urlMatch[1];
+                        }
+                        
+                        if (originalUrl) {
+                            // Check URL for size indicators
+                            const sizeMatch = originalUrl.match(/(\d+)x(\d+)/);
+                            if (sizeMatch && sizeMatch[1] && sizeMatch[2]) {
+                                width = parseInt(sizeMatch[1]);
+                                height = parseInt(sizeMatch[2]);
+                            }
+                            
+                            // Check URL for purpose indicators
+                            const imageTypes = [
+                                { pattern: /hero|banner|header|cover|featured|background/, w: 1600, h: 900 },
+                                { pattern: /card|thumbnail|thumb|preview/, w: 600, h: 400 }
+                            ];
+                            
+                            for (const type of imageTypes) {
+                                if (type.pattern.test(originalUrl.toLowerCase())) {
+                                    width = type.w;
+                                    height = type.h;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Ensure reasonable dimensions
+                        width = (width > 0 && width <= 2000) ? width : 300;
+                        height = (height > 0 && height <= 2000) ? height : 200;
                         
                         const randomSeed = Math.random();
                         
                         // Create a temporary element to modify the style
-                        const tempEl = document.createElement('div');
-                        tempEl.setAttribute('style', style);
+                        let newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
                         
-                        let newSrc = '';
                         // Update the style to replace the URL but keep other properties
                         if (tempEl.style.backgroundImage) {
                             // Extract original URL
                             const originalUrl = tempEl.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
                             
-                            newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
                             el.style.backgroundImage = `url('${newSrc}')`;
                             
                             // Add to replaced images list if URL was found
@@ -1010,7 +1190,8 @@
                                     type: 'backgroundImage',
                                     element: el.tagName,
                                     originalSrc: originalUrl[1],
-                                    newSrc: newSrc
+                                    newSrc: newSrc,
+                                    dimensions: `${width}x${height}`
                                 });
                             }
                         } else if (tempEl.style.background) {
@@ -1018,7 +1199,6 @@
                             const backgroundValue = tempEl.style.background;
                             const originalUrl = backgroundValue.match(/url\(['"]?([^'"]+)['"]?\)/);
                             
-                            newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
                             el.style.background = backgroundValue.replace(/url\(['"]?([^'"]+)['"]?\)/g, 
                                 `url('${newSrc}')`);
                             
@@ -1028,7 +1208,8 @@
                                     type: 'background',
                                     element: el.tagName,
                                     originalSrc: originalUrl[1],
-                                    newSrc: newSrc
+                                    newSrc: newSrc,
+                                    dimensions: `${width}x${height}`
                                 });
                             }
                         }
@@ -1041,30 +1222,110 @@
                     if (styleEl.textContent) {
                         let cssText = styleEl.textContent;
                         
-                        // Find all URL matches in the CSS
-                        const urlMatches = cssText.match(/background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/g) || [];
+                        // Special handling for hero classes in stylesheets
+                        const heroSelectorPattern = /\.(hero|banner|header|jumbotron|showcase)(\s|\{|,|:)/g;
+                        let heroMatch;
+                        while ((heroMatch = heroSelectorPattern.exec(cssText)) !== null) {
+                            // Found a hero-like selector, extract the full rule
+                            const startPos = cssText.indexOf('{', heroMatch.index);
+                            if (startPos !== -1) {
+                                let braceCount = 1;
+                                let endPos = startPos + 1;
+                                
+                                // Find matching closing brace
+                                while (braceCount > 0 && endPos < cssText.length) {
+                                    if (cssText[endPos] === '{') braceCount++;
+                                    if (cssText[endPos] === '}') braceCount--;
+                                    endPos++;
+                                }
+                                
+                                if (braceCount === 0) {
+                                    const ruleContent = cssText.substring(startPos + 1, endPos - 1);
+                                    
+                                    // Check if this rule contains a background image
+                                    const bgMatch = ruleContent.match(/background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/);
+                                    if (bgMatch) {
+                                        // This is a hero element with background, replace with large image
+                                        const originalUrl = bgMatch[2];
+                                        const randomSeed = Math.random();
+                                        const newSrc = `https://picsum.photos/1600/900?random=${randomSeed}`;
+                                        
+                                        // Replace URL while preserving other background properties
+                                        const updatedRule = ruleContent.replace(
+                                            /url\(['"]?([^'"]+)['"]?\)/g, 
+                                            `url('${newSrc}')`
+                                        );
+                                        
+                                        // Update the CSS
+                                        cssText = cssText.substring(0, startPos + 1) + 
+                                                 updatedRule + 
+                                                 cssText.substring(endPos - 1);
+                                        
+                                        // Add to replaced images list
+                                        replacedImages.push({
+                                            type: 'css-hero',
+                                            selector: heroMatch[0].trim(),
+                                            originalSrc: originalUrl,
+                                            newSrc: newSrc,
+                                            dimensions: '1600x900'
+                                        });
+                                    }
+                                }
+                            }
+                        }
                         
+                        // Process other background images in CSS
                         // Updated regex to catch both background: url() and background-image: url() patterns
                         const bgPattern = /background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/g;
                         
-                        cssText = cssText.replace(bgPattern, (match) => {
+                        cssText = cssText.replace(bgPattern, (match, p1, p2) => {
+                            // Don't replace the ones we already processed as heroes
+                            if (match.includes("picsum.photos/1600/900")) {
+                                return match;
+                            }
+                            
                             // Default sizes when we can't determine actual size
-                            const width = 400;
-                            const height = 300;
-                            const randomSeed = Math.random();
+                            let width = 400;
+                            let height = 300;
+                            
+                            // Try to determine if this is for a hero element based on the selector
+                            const selectorEnd = cssText.lastIndexOf('{', cssText.indexOf(match));
+                            if (selectorEnd !== -1) {
+                                const selectorStart = cssText.lastIndexOf('}', selectorEnd);
+                                const selector = cssText.substring(
+                                    selectorStart !== -1 ? selectorStart + 1 : 0, 
+                                    selectorEnd
+                                ).trim();
+                                
+                                // Check if selector suggests a hero image
+                                if (/hero|banner|header|jumbotron|showcase|carousel|slide/.test(selector)) {
+                                    width = 1600;
+                                    height = 900;
+                                }
+                                // Check for card or thumbnail selectors
+                                else if (/card|box|tile|thumb|thumbnail/.test(selector)) {
+                                    width = 600;
+                                    height = 400;
+                                }
+                                // Check for small UI elements
+                                else if (/icon|button|avatar|profile|badge/.test(selector)) {
+                                    width = 100;
+                                    height = 100;
+                                }
+                            }
                             
                             // Extract original URL
-                            const originalUrl = match.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            const originalUrl = p2;
+                            const randomSeed = Math.random();
                             const newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
                             
                             // Add to replaced images list if URL was found
-                            if (originalUrl && originalUrl[1]) {
-                                replacedImages.push({
-                                    type: 'css',
-                                    originalSrc: originalUrl[1],
-                                    newSrc: newSrc
-                                });
-                            }
+                            replacedImages.push({
+                                type: 'css',
+                                originalSrc: originalUrl,
+                                newSrc: newSrc,
+                                dimensions: `${width}x${height}`
+                            });
                             
                             // Keep the original property (background or background-image) but replace the URL
                             return match.replace(/url\(['"]?([^'"]+)['"]?\)/g, 
@@ -1527,11 +1788,13 @@
                         let details = '';
                         
                         if (img.type === 'img') {
-                            details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)}`;
+                            details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
                         } else if (img.type === 'background' || img.type === 'backgroundImage') {
-                            details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)}`;
+                            details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
                         } else if (img.type === 'css') {
-                            details = `<strong>CSS background</strong>: ${truncateUrl(img.originalSrc)}`;
+                            details = `<strong>CSS background</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
+                        } else if (img.type === 'css-hero') {
+                            details = `<strong>Hero/banner element</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
                         } else if (img.type === 'base64') {
                             details = `<strong>Base64 image</strong> in ${img.element} ${img.attribute} attribute`;
                         }
@@ -1734,7 +1997,7 @@
                         let details = '';
                         
                         if (img.type === 'img') {
-                            details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)}`;
+                            details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
                         } else if (img.type === 'background' || img.type === 'backgroundImage') {
                             details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)}`;
                         } else if (img.type === 'css') {
