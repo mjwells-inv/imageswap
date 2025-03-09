@@ -1918,11 +1918,53 @@
                 ];
 
 				keywords.forEach(item => {
-				    document.querySelectorAll('.success li').forEach(li => {
-				        li.innerHTML = li.innerHTML.replace(new RegExp(item.keyword, 'gi'), match => {
-				            return `<span class="tooltip-keyword" data-tooltip="${item.tooltipText}">${match}</span>`;
-				        });
-				    });
+					const regex = new RegExp(`\\b${item.keyword}\\b`, 'gi');
+					
+					document.querySelectorAll('.success li').forEach(li => {
+						// Get all text nodes in the list item
+						const textNodes = [];
+						const walkNodes = document.createTreeWalker(li, NodeFilter.SHOW_TEXT, null, false);
+						let node;
+						while (node = walkNodes.nextNode()) {
+							textNodes.push(node);
+						}
+						
+						// Process each text node separately
+						textNodes.forEach(textNode => {
+							const parent = textNode.parentNode;
+							// Skip if parent is already a tooltip
+							if (parent.classList && parent.classList.contains('tooltip-keyword')) {
+								return;
+							}
+							
+							// Replace text and create spans
+							const text = textNode.nodeValue;
+							const fragments = text.split(regex);
+							
+							if (fragments.length > 1) { // If we have matches
+								const container = document.createDocumentFragment();
+								
+								for (let i = 0; i < fragments.length; i++) {
+									// Add text fragment
+									if (fragments[i]) {
+										container.appendChild(document.createTextNode(fragments[i]));
+									}
+									
+									// Add matching keyword with tooltip
+									if (i < fragments.length - 1) {
+										const match = text.match(regex)[i];
+										const span = document.createElement('span');
+										span.className = 'tooltip-keyword';
+										span.setAttribute('data-tooltip', item.tooltipText);
+										span.textContent = match;
+										container.appendChild(span);
+									}
+								}
+								
+								parent.replaceChild(container, textNode);
+							}
+						});
+					});
 				});
 				attachTooltipListeners();
 				
