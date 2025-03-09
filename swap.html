@@ -1371,6 +1371,79 @@
                         }
                     }
                 }
+				// Find all base64 audio in any attribute or style and replace them
+				const allNodesForAudio = document.createNodeIterator(doc.documentElement, NodeFilter.SHOW_ELEMENT);
+				let currentNodeAudio;
+				while (currentNodeAudio = allNodesForAudio.nextNode()) {
+					const attributes = currentNodeAudio.attributes;
+					if (!attributes) continue;
+					
+					for (let i = 0; i < attributes.length; i++) {
+						const attr = attributes[i];
+						// Check for base64 audio data
+						if (attr.value.includes('data:audio/') || 
+							attr.value.includes('data:application/ogg') || 
+							attr.value.includes('data:application/octet-stream')) {
+							// Track original value
+							const originalValue = attr.value;
+							
+							// Determine if it should be long or short audio based on size or context
+							const isLong = attr.value.length > 10000 || // Large base64 likely means longer audio
+									 currentNodeAudio.hasAttribute('loop') || 
+									 (currentNodeAudio.className || '').includes('music') ||
+									 (currentNodeAudio.id || '').includes('music');
+							
+							const newSrc = getRandomAudioFile(isLong);
+							
+							// Create a new value
+							const newValue = attr.value.replace(/data:(audio\/[^;]+|application\/ogg|application\/octet-stream);base64,[^'")\s]+/g, newSrc);
+							
+							// Only add to replaced audio list if something changed
+							if (newValue !== originalValue) {
+								replacedAudio.push({
+									type: 'base64',
+									element: currentNodeAudio.tagName,
+									attribute: attr.name,
+									soundType: isLong ? 'long' : 'short'
+								});
+							}
+							
+							attr.value = newValue;
+						}
+					}
+				}
+				// Find all base64 video in any attribute or style and replace them
+				const allNodesForVideo = document.createNodeIterator(doc.documentElement, NodeFilter.SHOW_ELEMENT);
+				let currentNodeVideo;
+				while (currentNodeVideo = allNodesForVideo.nextNode()) {
+					const attributes = currentNodeVideo.attributes;
+					if (!attributes) continue;
+					
+					for (let i = 0; i < attributes.length; i++) {
+						const attr = attributes[i];
+						// Check for base64 video data
+						if (attr.value.includes('data:video/')) {
+							// Track original value
+							const originalValue = attr.value;
+							
+							const newSrc = getRandomVideoFile();
+							
+							// Create a new value
+							const newValue = attr.value.replace(/data:video\/[^;]+;base64,[^'")\s]+/g, newSrc);
+							
+							// Only add to replaced videos list if something changed
+							if (newValue !== originalValue) {
+								replacedVideos.push({
+									type: 'base64',
+									element: currentNodeVideo.tagName,
+									attribute: attr.name
+								});
+							}
+							
+							attr.value = newValue;
+						}
+					}
+				}
             }
             
             // Process all audio elements if needed
