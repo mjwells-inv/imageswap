@@ -1,0 +1,2422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Webpages Media Replacer</title>
+	<link rel="icon" type="image/x-icon" href="favicon.png">
+	 <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const titles = [
+                "Pixel Perfect",
+                "The Replacening",
+                "Replace Harder",
+                "Reloaded",
+                "A New Patch",
+                "Judgment JPEG",
+                "PNG & Beyond",
+                "Now With More JPEG",
+                "The Uncanny Patch",
+                "The Files Awaken",
+                "The Replacer Strikes Back",
+		"Rise of the PNGs",
+		"Cache Me If You Can",
+		"Now with 200% More JPEG",
+		"Lost in Compression",
+		"Revenge of the GIF",
+		"2 Fast 2 Replacious",
+		"Replacers of the Lost Ark",
+		"Honey, I Replaced the GIFS!",
+		"Placeholder II: Electric Boogaloo",
+		"Invasion of the Placeholders",
+		"Dude, Where's My GIF?",
+		"No Image for Old Men",
+		"Fellowship of the Links",
+		"Replacement Day",
+		"Dial M for MOV",
+		"Link Harder",
+		"Desperately Replacing Susan",
+		"An Image Link to the Past",
+		"Confessions of a Broken Link",
+		"Mission: Replacable",
+		"Patch Me If You Can",
+		"At JPEG's End",
+		"The PNG That Time Forgot",
+		"Replace/Off",
+		"Silence of the WAVs",
+		"Attack of the Codecs",
+		"A Space Audyssey",
+		"Raiders of the Lost Frames",
+		"A Fistful of WAV Files",
+		"Sampling Private Ryan",
+		"Video Killed the Placeholder Star",
+		"Big Trouble in Little Targa",
+		"Replacer & Commander",
+		"Crouching Targa, Hidden Placeholder",
+		"SVG Planet",
+            ];
+
+            // Title randomization just for fun
+            const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+            document.getElementById("title").textContent = randomTitle;
+        });
+    </script>
+	
+    <style>
+	
+		@import url('https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap');
+		@import url('https://fonts.googleapis.com/css2?family=Exo:wght@900&display=swap');
+		
+		html {
+			background-color: #111527;
+		}
+		
+		*, *::before, *::after {
+			box-sizing: border-box;
+		}
+		
+		body, html {
+		  height: 100%;
+
+		  margin: 0;
+		  line-height: 1.6;
+		  max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+		}
+        
+		.lines {
+			position: absolute;
+			top: 90px;
+			left: 0;
+			width: 100%;
+			height: 4.2em;
+			z-index: 1000;
+			background: linear-gradient(rgba(89, 193, 254, 0.2) 20%, 
+										#59c1fe 40%, 
+										#59c1fe 60%, 
+										rgba(89, 193, 254, 0.2) 80%);
+			background-size: 100% 10px; /* Ensures proper line spacing */
+			box-shadow: 0 0 1em rgba(89, 193, 254, 0.4);
+			z-index: -1; /* Places it behind other elements */
+		}
+
+
+		h1 {
+			text-align: center;
+			white-space: nowrap; /* Prevents wrapping */
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%) skew(-15deg); /* This keeps both translation & skew */
+			width: max-content; /* Ensures it only takes the necessary width */
+			font-family: 'Exo', sans-serif;
+			font-size: 7em;
+			letter-spacing: 0.03em;
+			margin: 0;
+			z-index: 1001;
+		  
+		  &::after {
+			content: '';
+			position: absolute;
+			top: -0.1em;
+			right: 0.05em;
+			width: 0.4em;
+			height: 0.4em;
+			background: 
+			  radial-gradient(white 3%, rgba(white, 0.3) 15%, rgba(white, 0.05) 60%, transparent 80%),
+			  radial-gradient(rgba(white, 0.2) 50%, transparent 60%) 50% 50% / 5% 100%,
+			  radial-gradient(rgba(white, 0.2) 50%, transparent 60%) 50% 50% / 70% 5%;
+			background-repeat: no-repeat;
+		  }
+		  
+		  span:first-child {
+			display: block;
+			text-shadow: 0 0 0.1em #8ba2d0, 0 0 0.2em black,  0 0 5em #165ff3;
+			-webkit-text-stroke: 0.06em rgba(black, 0.5);
+		  }
+		  
+		  span:last-child {
+			position: absolute;
+			left: 0;
+			top: 0;
+			background-image: linear-gradient(#032d50 25%, #00a1ef 35%, white 50%, #20125f 50%, #8313e7 55%, #ff61af 75%);
+			-webkit-text-stroke: 0.01em #94a0b9;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		  }
+		}
+		
+		h1::before {
+			content: '';
+			position: absolute;
+			top: -20%; /* Adjusts glow positioning */
+			left: -5%;
+			width: 110%;
+			height: 150%;
+			background: radial-gradient(circle, rgba(89, 193, 254, 0.3) 30%, rgba(89, 193, 254, 0) 70%);
+			filter: blur(15px); /* Softens the glow */
+			z-index: -1; /* Places it behind the text */
+			border-radius: 50%; /* Ensures smooth gradient fade */
+			pointer-events: none; /* Prevents interaction issues */
+		}
+
+		h2 {
+			text-align: center;
+			position: relative;
+			top: 180px;
+			font-family: 'Mr Dafoe';
+			font-size: 6em;
+			color: white;
+			text-shadow: 0 0 0.05em #fff, 0 0 0.2em #fe05e1, 0 0 0.3em #fe05e1;
+			transform: rotate(-7deg);
+			left: 50%;
+			transform: translateX(-50%) rotate(-7deg); /* Ensures it's centered while keeping rotation */
+			width: max-content;
+			margin: 0;
+			margin-top: -1.2em;
+			z-index: 1002;
+		}
+        
+        .form-container {
+		    color: white;
+            background-color: #313338;
+            border-radius: 0 8px 8px 8px; /* Top-left corner is 0, others are rounded */
+			position: relative;
+            padding: 20px;
+			margin-top: 180px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+		    color: white;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+		
+        
+        input[type="url"], textarea {
+		    background-color: #313338;
+			color: white;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            min-height: 200px;
+            font-family: monospace;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 20px;
+            display: none;
+            padding: 10px;
+            background-color: #313338;
+            border-radius: 4px;
+        }
+
+        .success {
+            color: #27ae60;
+            margin-top: 20px;
+            display: none;
+            padding: 10px;
+            background-color: #313338;
+            border-radius: 4px;
+        }
+		
+		.tooltip-keyword {
+		    color: yellow;
+			font-weight: bold;
+			text-decoration: underline;
+			cursor: help;
+		}
+
+        .tab-container {
+		    position: relative;
+			top: 180px;
+        }
+
+        .tab {
+		    color: #75756d;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1e1f22;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+        }
+
+        .tab.active {
+		    color: white;
+            background-color: #313338;
+            border-top: 2px solid #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .proxy-select {
+            margin-bottom: 15px;
+        }
+		
+		#proxySelector {
+		    color: white;
+			background-color: #313338;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			padding: 8px;
+			width: 100%;
+			margin-top: 5px;
+		}
+		
+		.preview-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 10px;
+		}
+
+        .preview-container {
+		    color: white;
+            display: none;
+            margin-top: 2px;
+			margin-bottom: 20px;
+            border-radius: 4px;
+            padding: 20px;
+            background-color: #313338;
+        }
+		
+		.preview-header {
+		  display: flex;
+		  justify-content: space-between;
+		  align-items: center;
+		  margin-bottom: 10px;
+		}
+
+        .preview-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .open-link {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            text-decoration: underline;
+            color: #3498db;
+            cursor: pointer;
+        }
+        
+        .replacement-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .replacement-option {
+            background-color: #1e1f22;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .replacement-option.active {
+            background-color: #2c2f33;
+            border-color: #3498db;
+        }
+        
+        /* Toggle-specific styling */
+        .replacement-option.toggle {
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .replacement-option.toggle::before {
+            content: "";
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border: 2px solid #3498db;
+            border-radius: 3px;
+            background-color: transparent;
+        }
+        
+        .replacement-option.toggle.active::before {
+            background-color: #3498db;
+        }
+        
+        .replacement-option.toggle.active::after {
+            content: "✓";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .audio-options {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .audio-options.visible {
+            display: block;
+        }
+        
+        h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+	<div class="lines"></div>
+	<h1>
+	  <span>IW MEDIA REPLACER 2</span>
+	  <span>IW MEDIA REPLACER 2</span>
+	</h1>
+	<h2 id="title">The Replacening</h2>
+	<br>
+	<br>
+	<div class="grid"></div>
+    <div class="tab-container">
+        <div class="tab active" data-tab="urlTab">URL Method</div>
+        <div class="tab" data-tab="htmlTab">HTML Method</div>
+    </div>
+
+    <div class="tab-content active" id="urlTab">
+        <div class="form-container">
+            <div class="proxy-select">
+                <label for="proxySelector">Select Proxy (if one fails, try another):</label>
+                <select id="proxySelector">
+                    <option value="allorigins">AllOrigins (default)</option>
+                    <option value="corsproxy">CORS Proxy</option>
+                    <option value="corsanywhere">CORS Anywhere</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>What would you like to replace?</label>
+                <div class="replacement-options">
+                    <div class="replacement-option toggle active" data-replace="images">Images</div>
+                    <div class="replacement-option toggle" data-replace="audio">Audio</div>
+                    <div class="replacement-option toggle" data-replace="video">Video</div>
+                </div>
+                
+                <div class="audio-options" id="urlAudioOptions">
+                    <h4>Audio Replacement Options:</h4>
+                    <div class="replacement-options">
+                        <div class="replacement-option active" data-audio-type="auto">Auto-detect (Short vs Long)</div>
+                        <div class="replacement-option" data-audio-type="short">All Short Sounds</div>
+                        <div class="replacement-option" data-audio-type="long">All Long Sounds</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="websiteUrl">Enter Website URL:</label>
+                <input type="url" id="websiteUrl" placeholder="Paste full completion URL here..." required>
+            </div>
+            
+            <button id="submitUrlBtn">Replace Content</button>
+            
+            <div class="loading" id="loadingIndicatorUrl">
+                <div class="spinner"></div>
+                <p>Fetching website and replacing content...</p>
+            </div>
+            
+            <div class="error" id="errorMessageUrl"></div>
+            <div class="success" id="successMessageUrl"></div>
+        </div>
+        
+		<div class="preview-container" id="previewContainerUrl">
+		  <div class="preview-header">
+			<h3>Preview:</h3>
+			<div class="preview-actions">
+			  <button id="openUrlBtn">Open in New Tab</button>
+			  <button id="downloadUrlBtn">Download HTML</button>
+			</div>
+		  </div>
+		  <iframe id="previewFrameUrl"></iframe>
+		</div>
+	  </div>
+
+    <div class="tab-content" id="htmlTab">
+        <div class="form-container">
+            <div class="form-group">
+                <label>What would you like to replace?</label>
+                <div class="replacement-options">
+                    <div class="replacement-option toggle active" data-replace="images">Images</div>
+                    <div class="replacement-option toggle" data-replace="audio">Audio</div>
+                    <div class="replacement-option toggle" data-replace="video">Video</div>
+                </div>
+                
+                <div class="audio-options" id="htmlAudioOptions">
+                    <h4>Audio Replacement Options:</h4>
+                    <div class="replacement-options">
+                        <div class="replacement-option active" data-audio-type="auto">Auto-detect (Short vs Long)</div>
+                        <div class="replacement-option" data-audio-type="short">All Short Sounds</div>
+                        <div class="replacement-option" data-audio-type="long">All Long Sounds</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="htmlContent">Paste Website HTML:</label>
+                <textarea id="htmlContent" placeholder="CTRL-U on the completion, CTRL-A to select all, CTRL-C to copy. Then paste here." required></textarea>
+            </div>
+            
+            <button id="submitHtmlBtn">Replace Content</button>
+            
+            <div class="loading" id="loadingIndicatorHtml">
+                <div class="spinner"></div>
+                <p>Processing HTML and replacing content...</p>
+            </div>
+            
+            <div class="error" id="errorMessageHtml"></div>
+            <div class="success" id="successMessageHtml"></div>
+        </div>
+        
+        <div class="preview-container" id="previewContainerHtml">
+            <h3>Preview:</h3>
+            <iframe id="previewFrameHtml"></iframe>
+            <div class="preview-actions">
+                <a id="openHtmlLink" class="open-link" target="_blank">Open in New Tab</a>
+                <button id="downloadHtmlBtn">Download HTML</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Replacement option toggle functionality
+        document.querySelectorAll('.replacement-option.toggle').forEach(option => {
+            option.addEventListener('click', function() {
+                // Toggle active state for this option
+                this.classList.toggle('active');
+                
+                // Show audio options if audio is selected
+                const tabId = this.closest('.tab-content').id;
+                const audioOptions = document.getElementById(tabId === 'urlTab' ? 'urlAudioOptions' : 'htmlAudioOptions');
+                const audioActive = document.querySelector(`#${tabId} .replacement-option[data-replace="audio"].active`) !== null;
+                
+                if (audioActive) {
+                    audioOptions.classList.add('visible');
+                } else {
+                    audioOptions.classList.remove('visible');
+                }
+                
+                // Make sure at least one option is selected
+                const selectedOptions = document.querySelectorAll(`#${tabId} .replacement-option.toggle.active`);
+                if (selectedOptions.length === 0) {
+                    // If none selected, re-select this one
+                    this.classList.add('active');
+                    
+                    // Show audio options if we re-selected audio
+                    if (this.dataset.replace === 'audio') {
+                        audioOptions.classList.add('visible');
+                    }
+                }
+            });
+        });
+        
+        // Audio type selection
+        document.querySelectorAll('.replacement-option[data-audio-type]').forEach(option => {
+            option.addEventListener('click', function() {
+                // Find the parent container
+                const parent = this.closest('.replacement-options');
+                // Remove active class from all siblings
+                parent.querySelectorAll('.replacement-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                // Add active class to clicked option
+                this.classList.add('active');
+            });
+        });
+		
+		function detectSvgs(doc) {
+			const svgReports = [];
+			
+			// SVG detection and reporting
+			const svgElements = doc.querySelectorAll('svg');
+			const svgUseElements = doc.querySelectorAll('use[href*="#"]'); // SVG reference elements
+			const svgImages = doc.querySelectorAll('img[src*=".svg"], img[src^="data:image/svg+xml"]');
+			const svgObjects = doc.querySelectorAll('object[type="image/svg+xml"], embed[type="image/svg+xml"]');
+
+
+			// Process inline SVG elements
+			svgElements.forEach(svg => {
+				// Try to determine what this SVG might be used for
+				const id = svg.id || '';
+				const className = svg.className?.baseVal || '';
+				const viewBox = svg.getAttribute('viewBox') || '';
+				const parent = svg.parentElement;
+				const parentClass = parent ? (parent.className || '') : '';
+				
+				// Detect SVG purpose based on various factors
+				let purpose = 'Unknown';
+				const size = {
+					width: svg.getAttribute('width') || viewBox.split(' ')[2] || 'unknown',
+					height: svg.getAttribute('height') || viewBox.split(' ')[3] || 'unknown'
+				};
+				
+				// Check for small icons
+				if (size.width <= 24 && size.height <= 24 || 
+					className.includes('icon') || id.includes('icon') || 
+					parentClass.includes('icon') || parentClass.includes('button')) {
+					purpose = 'Icon or UI element';
+				}
+				// Check for logos
+				else if (className.includes('logo') || id.includes('logo') || parentClass.includes('logo')) {
+					purpose = 'Logo';
+				}
+				// Check for charts/diagrams
+				else if (className.includes('chart') || id.includes('chart') || 
+						 className.includes('graph') || id.includes('graph') ||
+						 className.includes('diagram') || id.includes('diagram')) {
+					purpose = 'Chart or diagram';
+				}
+				// Check for illustrations
+				else if (className.includes('illustration') || id.includes('illustration')) {
+					purpose = 'Illustration';
+				}
+				// Check if it might be a loading spinner
+				else if (svg.querySelector('animate, animateTransform') || 
+						 className.includes('spinner') || id.includes('spinner') ||
+						 className.includes('loading') || id.includes('loading')) {
+					purpose = 'Animation or loading indicator';
+				}
+				
+				// Add to SVG reports
+				svgReports.push({
+					type: 'inline',
+					element: 'svg',
+					id: id || 'none',
+					className: className || 'none',
+					dimensions: `${size.width}x${size.height}`,
+					purpose: purpose
+				});
+			});
+
+			// Process SVG image references
+			svgImages.forEach(img => {
+				const src = img.src || 'unknown';
+				const id = img.id || '';
+				const className = img.className || '';
+				
+				// Try to determine purpose
+				let purpose = 'Unknown';
+				if (className.includes('icon') || id.includes('icon')) {
+					purpose = 'Icon or UI element';
+				} else if (className.includes('logo') || id.includes('logo')) {
+					purpose = 'Logo';
+				} else if (src.toLowerCase().includes('icon')) {
+					purpose = 'Icon or UI element';
+				} else if (src.toLowerCase().includes('logo')) {
+					purpose = 'Logo';
+				} else if (img.width <= 40 && img.height <= 40) {
+					purpose = 'Small icon or button';
+				}
+				
+				svgReports.push({
+					type: 'image',
+					element: 'img',
+					src: src,
+					dimensions: `${img.width || 'unknown'}x${img.height || 'unknown'}`,
+					purpose: purpose
+				});
+			});
+
+			// Process SVG objects and embeds
+			[...svgObjects].forEach(obj => {
+				const data = obj.data || obj.src || 'unknown';
+				const id = obj.id || '';
+				const className = obj.className || '';
+				
+				// Try to determine purpose
+				let purpose = 'Unknown';
+				if (className.includes('chart') || id.includes('chart')) {
+					purpose = 'Chart or data visualization';
+				} else if (className.includes('illustration') || id.includes('illustration')) {
+					purpose = 'Illustration';
+				} else if (data.toLowerCase().includes('chart') || data.toLowerCase().includes('graph')) {
+					purpose = 'Chart or data visualization';
+				}
+				
+				svgReports.push({
+					type: 'object/embed',
+					element: obj.tagName.toLowerCase(),
+					src: data,
+					dimensions: `${obj.width || 'unknown'}x${obj.height || 'unknown'}`,
+					purpose: purpose
+				});
+			});
+			
+			return svgReports;
+		}
+		
+		function attachTooltipListeners() {
+			document.querySelectorAll('.tooltip-keyword').forEach(elem => {
+				elem.addEventListener('mouseenter', function(e) {
+					tooltip.textContent = this.getAttribute('data-tooltip');
+					tooltip.style.display = 'block';
+				});
+				elem.addEventListener('mousemove', function(e) {
+					tooltip.style.left = (e.pageX + 10) + 'px';
+					tooltip.style.top = (e.pageY + 10) + 'px';
+				});
+				elem.addEventListener('mouseleave', function() {
+					tooltip.style.display = 'none';
+				});
+			});
+		}
+
+        // Function to get proxy URL based on selection
+        function getProxyUrl(url) {
+            const proxySelector = document.getElementById('proxySelector').value;
+            
+            switch(proxySelector) {
+                case 'allorigins':
+                    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                case 'corsproxy':
+                    return 'https://corsproxy.io/?' + encodeURIComponent(url);
+                case 'corsanywhere':
+                    return 'https://cors-anywhere.herokuapp.com/' + url;
+                default:
+                    return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+            }
+        }
+
+        // Sample audio files for replacement
+        const shortAudioFiles = [
+            "https://mjwells-inv.github.io/imageswap/bounce.mp3",
+            "https://mjwells-inv.github.io/imageswap/idea.mp3",
+			"https://mjwells-inv.github.io/imageswap/interface.wav",
+			"https://mjwells-inv.github.io/imageswap/pop.wav",
+			"https://mjwells-inv.github.io/imageswap/punch.wav",
+			"https://mjwells-inv.github.io/imageswap/success.wav",
+			"https://mjwells-inv.github.io/imageswap/switch.wav",
+			"https://mjwells-inv.github.io/imageswap/whip.mp3",
+			"https://mjwells-inv.github.io/imageswap/whoosh.wav",
+        ];
+
+        const longAudioFiles = [
+            "https://mjwells-inv.github.io/imageswap/magic.ogg",
+            "https://mjwells-inv.github.io/imageswap/aligned.ogg",
+			"https://mjwells-inv.github.io/imageswap/overreact.ogg",
+			"https://mjwells-inv.github.io/imageswap/christmas.ogg",
+        ];
+
+        // Function to get a random audio file from the appropriate list
+        function getRandomAudioFile(isLong) {
+            const audioList = isLong ? longAudioFiles : shortAudioFiles;
+            return audioList[Math.floor(Math.random() * audioList.length)];
+        }
+        
+        // Sample video files for replacement
+        const videoFiles = [
+            "https://mjwells-inv.github.io/imageswap/frogs.mp4",
+			"https://mjwells-inv.github.io/imageswap/kitten.mp4",
+			"https://mjwells-inv.github.io/imageswap/rain.mp4",
+			"https://mjwells-inv.github.io/imageswap/leek.mp4",
+			
+        ];
+
+        // Function to get a random video file
+        function getRandomVideoFile() {
+            return videoFiles[Math.floor(Math.random() * videoFiles.length)];
+        }
+
+        // Function to determine if an audio file should be replaced with a long or short sound
+        function shouldUseLongSound(element, audioType) {
+            if (audioType === 'long') return true;
+            if (audioType === 'short') return false;
+            
+            // Auto-detect logic
+            
+            // 0. Check if audio has controls - typically indicates music playback
+            if (element.hasAttribute('controls')) {
+                return true;
+            }
+            
+            // 1. Check for duration attribute if available
+            const duration = element.duration || element.getAttribute('duration');
+            if (duration) {
+                return parseFloat(duration) > 10; // If longer than 10 seconds, use long sound
+            }
+            
+            // 2. Check file extension if possible
+            const src = element.src || element.getAttribute('src') || '';
+            if (src.includes('music') || src.includes('soundtrack') || src.includes('background') || 
+                src.includes('loop') || src.includes('ambient') || src.includes('theme') ||
+                src.includes('stream') || src.includes('mp3') || src.includes('song')) {
+                return true;
+            }
+            
+            if (src.includes('sfx') || src.includes('effect') || src.includes('click') || 
+                src.includes('beep') || src.includes('notification') || src.includes('alert')) {
+                return false;
+            }
+            
+            // 3. Check element properties
+            if (element.loop || element.hasAttribute('loop')) {
+                return true; // Looped audio is likely background/music
+            }
+            
+            // 4. Check for context in the entire document (broader search for specific types of pages)
+            const pageTitle = document.title.toLowerCase();
+            if (pageTitle.includes('radio') || pageTitle.includes('music') || pageTitle.includes('player') || 
+                pageTitle.includes('sound') || pageTitle.includes('audio') || pageTitle.includes('podcast')) {
+                return true;
+            }
+            
+            // 5. Check class names and IDs
+            const className = element.className || '';
+            const id = element.id || '';
+            
+            if (className.includes('music') || className.includes('background') || 
+                id.includes('music') || id.includes('background')) {
+                return true;
+            }
+            
+            if (className.includes('sfx') || className.includes('effect') || 
+                id.includes('sfx') || id.includes('effect')) {
+                return false;
+            }
+            
+            // 6. Check the parent and surrounding context
+            let currentElement = element;
+            while (currentElement && currentElement.parentElement) {
+                const parentElement = currentElement.parentElement;
+                const parentClass = parentElement.className || '';
+                const parentId = parentElement.id || '';
+                
+                // Check for music/audio context in parent containers
+                const musicContainerTerms = ['player', 'audio', 'media', 'music', 'sound', 'radio', 'track', 'song'];
+                for (const term of musicContainerTerms) {
+                    if (parentClass.toLowerCase().includes(term) || parentId.toLowerCase().includes(term)) {
+                        return true;
+                    }
+                }
+                
+                // Check if it's in a button or UI control which suggests short SFX
+                if (parentElement.tagName === 'BUTTON' || 
+                    parentClass.includes('button') || 
+                    parentClass.includes('control') ||
+                    parentId.includes('button') ||
+                    parentClass.includes('btn')) {
+                    return false;
+                }
+                
+                // Check parent attributes
+                if (parentElement.getAttribute('data-audio-type') === 'music' ||
+                    parentElement.getAttribute('data-sound-type') === 'music') {
+                    return true;
+                }
+                if (parentElement.getAttribute('data-audio-type') === 'sfx' ||
+                    parentElement.getAttribute('data-sound-type') === 'effect') {
+                    return false;
+                }
+                
+                currentElement = parentElement;
+            }
+            
+            // 7. Examine nearby text content for clues - expanded keyword list
+            let pageTextContent = document.body.textContent.toLowerCase();
+            
+            // Look for music-related terms in the entire page
+            const musicTerms = [
+                'now playing', 'track', 'song', 'artist', 'album', 'playlist', 
+                'music', 'radio', 'tune', 'melody', 'audio', 'listen', 
+                'stream', 'play', 'pause', 'volume', 'soundtrack'
+            ];
+            
+            // Look for SFX-related terms
+            const sfxTerms = [
+                'effect', 'notification', 'alert', 'beep', 'click', 'tap',
+                'sfx', 'sound effect', 'ui sound', 'interface sound',
+                'feedback', 'interaction'
+            ];
+            
+            // Check if page has significantly more music terms than SFX terms
+            let musicTermCount = 0;
+            let sfxTermCount = 0;
+            
+            for (const term of musicTerms) {
+                if (pageTextContent.includes(term)) {
+                    musicTermCount++;
+                }
+            }
+            
+            for (const term of sfxTerms) {
+                if (pageTextContent.includes(term)) {
+                    sfxTermCount++;
+                }
+            }
+            
+            // If we have significantly more music terms, it's likely a music page
+            if (musicTermCount > sfxTermCount + 1) {
+                return true;
+            }
+            
+            // 8. Look for nearby elements that indicate music
+            let nearbyTextIndicatesMusic = false;
+            let nearbyTextIndicatesSFX = false;
+            
+            // Look for related elements near the audio element
+            const checkElementAndSiblings = (element, depth = 3) => {
+                if (!element || depth <= 0) return;
+                
+                // Check this element
+                const textContent = element.textContent || '';
+                const tagName = element.tagName || '';
+                const elementClass = element.className || '';
+                
+                // Check for specific class names that indicate music/media
+                if (elementClass.includes('song') || elementClass.includes('track') || 
+                    elementClass.includes('artist') || elementClass.includes('player') ||
+                    elementClass.includes('radio') || elementClass.includes('album')) {
+                    nearbyTextIndicatesMusic = true;
+                }
+                
+                // Check text content for music-related terms
+                const lowerText = textContent.toLowerCase();
+                for (const term of ['song', 'track', 'artist', 'album', 'playing', 'listen', 'playlist', 'radio']) {
+                    if (lowerText.includes(term)) {
+                        nearbyTextIndicatesMusic = true;
+                    }
+                }
+                
+                // Check for sfx-related terms
+                for (const term of ['effect', 'click', 'beep', 'notification', 'alert']) {
+                    if (lowerText.includes(term)) {
+                        nearbyTextIndicatesSFX = true;
+                    }
+                }
+                
+                // Check siblings
+                Array.from(element.parentElement?.children || []).forEach(sibling => {
+                    if (sibling !== element) {
+                        const siblingText = sibling.textContent || '';
+                        const siblingClass = sibling.className || '';
+                        
+                        if (siblingClass.includes('song') || siblingClass.includes('artist') ||
+                            siblingClass.includes('track') || siblingClass.includes('player')) {
+                            nearbyTextIndicatesMusic = true;
+                        }
+                        
+                        const lowerSiblingText = siblingText.toLowerCase();
+                        for (const term of ['song', 'track', 'artist', 'album', 'playing', 'listen']) {
+                            if (lowerSiblingText.includes(term)) {
+                                nearbyTextIndicatesMusic = true;
+                            }
+                        }
+                    }
+                });
+                
+                // Check parent
+                checkElementAndSiblings(element.parentElement, depth - 1);
+            };
+            
+            checkElementAndSiblings(element);
+            
+            if (nearbyTextIndicatesMusic) return true;
+            if (nearbyTextIndicatesSFX) return false;
+            
+            // 9. Check if audio is in a specific section of the page
+            currentElement = element;
+            while (currentElement) {
+                // Check if we're in a specific section like header, footer, or a section with an id/class
+                if (currentElement.tagName === 'HEADER' || currentElement.tagName === 'FOOTER') {
+                    return true; // Headers and footers often have background music
+                }
+                
+                if (currentElement.tagName === 'SECTION' || currentElement.tagName === 'DIV') {
+                    const id = currentElement.id || '';
+                    const className = currentElement.className || '';
+                    
+                    // Check section identifiers
+                    if (id.includes('music') || id.includes('audio') || id.includes('player') ||
+                        className.includes('music') || className.includes('audio') || className.includes('player') ||
+                        className.includes('radio') || className.includes('song') || className.includes('track')) {
+                        return true;
+                    }
+                    
+                    if (id.includes('effects') || id.includes('sfx') ||
+                        className.includes('effects') || className.includes('sfx')) {
+                        return false;
+                    }
+                }
+                
+                currentElement = currentElement.parentElement;
+            }
+            
+            // 10. Look at file size attribute if available (larger files are likely music)
+            const size = element.getAttribute('size') || element.getAttribute('data-size');
+            if (size) {
+                const sizeNum = parseInt(size);
+                if (!isNaN(sizeNum) && sizeNum > 500000) { // More than 500KB suggests music
+                    return true;
+                }
+            }
+            
+            // 11. Default to short for UI responsiveness if we couldn't determine
+            return false;
+        }
+
+        // Function to process HTML and replace images and audio
+		function processHTML(htmlContent) {
+			// Get the selected replacement types
+            const tabId = document.querySelector('.tab.active').dataset.tab;
+            const replaceImagesActive = document.querySelector(`#${tabId} .replacement-option[data-replace="images"].active`) !== null;
+            const replaceAudioActive = document.querySelector(`#${tabId} .replacement-option[data-replace="audio"].active`) !== null;
+            const replaceVideoActive = document.querySelector(`#${tabId} .replacement-option[data-replace="video"].active`) !== null;
+            
+            const audioType = document.querySelector(`#${tabId} .replacement-option[data-audio-type].active`)?.dataset.audioType || 'auto';
+            
+			// Create a DOM parser to parse the HTML
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(htmlContent, 'text/html');
+			
+			// Create arrays to track replaced media
+			const replacedImages = [];
+			const replacedAudio = [];
+            const replacedVideos = [];
+			
+			// Process all image elements if needed
+			if (replaceImagesActive) {
+                // Process all image elements
+                const images = doc.querySelectorAll('img');
+                images.forEach(img => {
+                    const originalSrc = img.src;
+                    
+                    // Get original width and height with improved detection
+                    let width, height;
+                    
+                    // Method 1: Try direct attributes first
+                    width = img.getAttribute('width');
+                    height = img.getAttribute('height');
+                    
+                    // Method 2: Check style attribute
+                    if ((!width || !height) && img.getAttribute('style')) {
+                        const style = img.getAttribute('style');
+                        const widthMatch = style.match(/width\s*:\s*(\d+)px/);
+                        const heightMatch = style.match(/height\s*:\s*(\d+)px/);
+                        
+                        if (widthMatch && widthMatch[1]) width = widthMatch[1];
+                        if (heightMatch && heightMatch[1]) height = heightMatch[1];
+                    }
+                    
+                    // Method 3: For images in specific containers, check for known patterns
+                    // Example: Check if image is in a "trainer-grid" or "facilities-grid" or hero section
+                    const parentClasses = img.parentElement?.className || '';
+                    const grandparentClasses = img.parentElement?.parentElement?.className || '';
+                    const imgClasses = img.className || '';
+                    
+                    // Hero image detection (check img class, parent class, and ancestors)
+                    const heroPatterns = ['hero', 'banner', 'header-img', 'cover-img', 'featured-img', 'jumbotron', 'splash'];
+                    const isHeroImage = heroPatterns.some(pattern => 
+                        imgClasses.includes(pattern) || 
+                        parentClasses.includes(pattern) || 
+                        grandparentClasses.includes(pattern) ||
+                        img.closest(`[class*="hero"],[class*="banner"],[id*="hero"],[id*="banner"]`)
+                    );
+                    
+                    if (isHeroImage) {
+                        width = 1600;
+                        height = 900;
+                    } else if (parentClasses.includes('trainer') || img.closest('.trainer-grid, .trainers-grid, .team-grid')) {
+                        width = 600;
+                        height = 600;
+                    } else if (parentClasses.includes('facilities') || img.closest('.facilities-grid, .facility-grid')) {
+                        width = 600;
+                        height = 400;
+                    }
+                    
+                    // Method 4: Check for dimension patterns in the original URL
+                    if ((!width || !height) && originalSrc) {
+                        // Check for common dimension patterns in URLs
+                        const dimensionMatch = originalSrc.match(/(\d+)x(\d+)/);
+                        if (dimensionMatch && dimensionMatch[1] && dimensionMatch[2]) {
+                            width = dimensionMatch[1];
+                            height = dimensionMatch[2];
+                        }
+                    }
+                    
+                    // Method 5: Check for classes that might contain dimension info
+                    const classNames = img.className || '';
+                    const widthClassMatch = classNames.match(/w-(\d+)/);
+                    const heightClassMatch = classNames.match(/h-(\d+)/);
+                    
+                    if (widthClassMatch && widthClassMatch[1]) width = widthClassMatch[1];
+                    if (heightClassMatch && heightClassMatch[1]) height = heightClassMatch[1];
+                    
+                    // Method 6: If image is taking up most of the width of its container, it's likely a hero/banner
+                    const imgStyle = window.getComputedStyle && img.style ? window.getComputedStyle(img) : null;
+                    if (imgStyle && (imgStyle.width === '100%' || imgStyle.width === '100vw' || 
+                                     imgStyle.maxWidth === '100%' || imgStyle.maxWidth === '100vw')) {
+                        // This is likely a full-width image like a hero banner
+                        width = 1600;
+                        height = 900;
+                    }
+                    
+                    // Special case: If it's a large image but height is very small, it might be a divider/separator
+                    if (width > 1000 && height < 100) {
+                        // Adjust for divider images
+                        width = 1600;
+                        height = 200; // Slightly taller than original to make content visible
+                    }
+                    
+                    // Check if it's a large image based on filename patterns
+                    if (originalSrc) {
+                        const largeImgPatterns = ['hero', 'banner', 'header', 'cover', 'featured', 'background', 'bg-'];
+                        if (largeImgPatterns.some(pattern => originalSrc.toLowerCase().includes(pattern))) {
+                            width = Math.max(width, 1200);
+                            height = Math.max(height, 800);
+                        }
+                    }
+                    
+                    // Fallback to defaults or use img properties
+                    width = width || img.width || 300;
+                    height = height || img.height || 200;
+                    
+                    // Remove any leading px and convert to numbers
+                    if (typeof width === 'string') width = parseInt(width.replace(/[^\d]/g, ''));
+                    if (typeof height === 'string') height = parseInt(height.replace(/[^\d]/g, ''));
+                    
+                    // Ensure width and height are reasonable
+                    width = (width > 0 && width <= 1200) ? width : 300;
+                    height = (height > 0 && height <= 1200) ? height : 200;
+                    
+                    // If it's a very small icon, make it slightly larger for visibility
+                    if (width < 100 && height < 100) {
+                        width = Math.max(width, 100);
+                        height = Math.max(height, 100);
+                    }
+                    
+                    // Generate a random seed
+                    const randomSeed = Math.random();
+                    
+                    // Replace with picsum URL
+                    img.src = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+                    
+                    // Add to replaced images list
+                    replacedImages.push({
+                        type: 'img',
+                        originalSrc: originalSrc,
+                        newSrc: img.src,
+                        dimensions: `${width}x${height}`
+                    });
+                    
+                    // Remove srcset if present
+                    img.removeAttribute('srcset');
+                    img.removeAttribute('data-src');
+                    img.removeAttribute('data-srcset');
+                });
+                
+                // Process all elements with background or background-image in style
+                const allElements = doc.querySelectorAll('*');
+                allElements.forEach(el => {
+                    const style = el.getAttribute('style');
+                    if (style && (style.includes('background:') || style.includes('background-image:'))) {
+                        // Track original style
+                        const originalStyle = style;
+                        
+                        // Get element dimensions with improved detection for backgrounds
+                        let width = 300;
+                        let height = 200;
+                        
+                        // 1. Get dimensions from inline style if available
+                        if (style.includes('width:') || style.includes('height:')) {
+                            const widthMatch = style.match(/width\s*:\s*(\d+)(px|%|vw|vh|rem|em)?/);
+                            const heightMatch = style.match(/height\s*:\s*(\d+)(px|%|vw|vh|rem|em)?/);
+                            
+                            if (widthMatch && widthMatch[1]) width = parseInt(widthMatch[1]);
+                            if (heightMatch && heightMatch[1]) height = parseInt(heightMatch[1]);
+                        }
+                        
+                        // 2. Check element tag type and classes for common patterns
+                        const tagName = el.tagName.toLowerCase();
+                        const className = el.className || '';
+                        const id = el.id || '';
+                        
+                        // Hero/banner detection
+                        const heroTerms = ['hero', 'banner', 'header', 'jumbo', 'showcase', 'splash', 'featured'];
+                        const isHeroElement = heroTerms.some(term => 
+                            className.toLowerCase().includes(term) || 
+                            id.toLowerCase().includes(term) ||
+                            el.closest(`[class*="hero"],[class*="banner"],[id*="hero"],[id*="banner"]`)
+                        );
+                        
+                        if (isHeroElement) {
+                            width = 1600;
+                            height = 900;
+                        }
+                        
+                        // 3. Element-specific size patterns
+                        else if (tagName === 'header' || tagName === 'section' || tagName === 'div') {
+                            // Header or main content section with background - likely a hero or large section bg
+                            if (el.children.length > 0 && (el.children[0].tagName === 'H1' || el.querySelector('h1, h2'))) {
+                                width = 1600;
+                                height = 900;
+                            }
+                            // Check for full-width elements
+                            else if (style.includes('width: 100%') || 
+                                     style.includes('width:100%') || 
+                                     className.includes('container') || 
+                                     className.includes('wrapper')) {
+                                width = 1600;
+                                height = 900;
+                            }
+                        }
+                        
+                        // 4. For specific layout components
+                        if (className.includes('card') || el.closest('.card')) {
+                            width = 600;
+                            height = 400;
+                        }
+                        
+                        // 5. Check URL for clues about image purpose/size
+                        const tempEl = document.createElement('div');
+                        tempEl.setAttribute('style', style);
+                        let originalUrl = '';
+                        
+                        if (tempEl.style.backgroundImage) {
+                            const urlMatch = tempEl.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            if (urlMatch && urlMatch[1]) originalUrl = urlMatch[1];
+                        } else if (tempEl.style.background) {
+                            const urlMatch = tempEl.style.background.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            if (urlMatch && urlMatch[1]) originalUrl = urlMatch[1];
+                        }
+                        
+                        if (originalUrl) {
+                            // Check URL for size indicators
+                            const sizeMatch = originalUrl.match(/(\d+)x(\d+)/);
+                            if (sizeMatch && sizeMatch[1] && sizeMatch[2]) {
+                                width = parseInt(sizeMatch[1]);
+                                height = parseInt(sizeMatch[2]);
+                            }
+                            
+                            // Check URL for purpose indicators
+                            const imageTypes = [
+                                { pattern: /hero|banner|header|cover|featured|background/, w: 1600, h: 900 },
+                                { pattern: /card|thumbnail|thumb|preview/, w: 600, h: 400 }
+                            ];
+                            
+                            for (const type of imageTypes) {
+                                if (type.pattern.test(originalUrl.toLowerCase())) {
+                                    width = type.w;
+                                    height = type.h;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Ensure reasonable dimensions
+                        width = (width > 0 && width <= 2000) ? width : 300;
+                        height = (height > 0 && height <= 2000) ? height : 200;
+                        
+                        const randomSeed = Math.random();
+                        
+                        // Create a temporary element to modify the style
+                        let newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+                        
+                        // Update the style to replace the URL but keep other properties
+                        if (tempEl.style.backgroundImage) {
+                            // Extract original URL
+                            const originalUrl = tempEl.style.backgroundImage.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            
+                            el.style.backgroundImage = `url('${newSrc}')`;
+                            
+                            // Add to replaced images list if URL was found
+                            if (originalUrl && originalUrl[1]) {
+                                replacedImages.push({
+                                    type: 'backgroundImage',
+                                    element: el.tagName,
+                                    originalSrc: originalUrl[1],
+                                    newSrc: newSrc,
+                                    dimensions: `${width}x${height}`
+                                });
+                            }
+                        } else if (tempEl.style.background) {
+                            // For shorthand background property, try to preserve other values
+                            const backgroundValue = tempEl.style.background;
+                            const originalUrl = backgroundValue.match(/url\(['"]?([^'"]+)['"]?\)/);
+                            
+                            el.style.background = backgroundValue.replace(/url\(['"]?([^'"]+)['"]?\)/g, 
+                                `url('${newSrc}')`);
+                            
+                            // Add to replaced images list if URL was found
+                            if (originalUrl && originalUrl[1]) {
+                                replacedImages.push({
+                                    type: 'background',
+                                    element: el.tagName,
+                                    originalSrc: originalUrl[1],
+                                    newSrc: newSrc,
+                                    dimensions: `${width}x${height}`
+                                });
+                            }
+                        }
+                    }
+                });
+                
+                // Process inline CSS with background images
+                const styleElements = doc.querySelectorAll('style');
+                styleElements.forEach(styleEl => {
+                    if (styleEl.textContent) {
+                        let cssText = styleEl.textContent;
+                        
+                        // Special handling for hero classes in stylesheets
+                        const heroSelectorPattern = /\.(hero|banner|header|jumbotron|showcase)(\s|\{|,|:)/g;
+                        let heroMatch;
+                        while ((heroMatch = heroSelectorPattern.exec(cssText)) !== null) {
+                            // Found a hero-like selector, extract the full rule
+                            const startPos = cssText.indexOf('{', heroMatch.index);
+                            if (startPos !== -1) {
+                                let braceCount = 1;
+                                let endPos = startPos + 1;
+                                
+                                // Find matching closing brace
+                                while (braceCount > 0 && endPos < cssText.length) {
+                                    if (cssText[endPos] === '{') braceCount++;
+                                    if (cssText[endPos] === '}') braceCount--;
+                                    endPos++;
+                                }
+                                
+                                if (braceCount === 0) {
+                                    const ruleContent = cssText.substring(startPos + 1, endPos - 1);
+                                    
+                                    // Check if this rule contains a background image
+                                    const bgMatch = ruleContent.match(/background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/);
+                                    if (bgMatch) {
+                                        // This is a hero element with background, replace with large image
+                                        const originalUrl = bgMatch[2];
+                                        const randomSeed = Math.random();
+                                        const newSrc = `https://picsum.photos/1600/900?random=${randomSeed}`;
+                                        
+                                        // Replace URL while preserving other background properties
+                                        const updatedRule = ruleContent.replace(
+                                            /url\(['"]?([^'"]+)['"]?\)/g, 
+                                            `url('${newSrc}')`
+                                        );
+                                        
+                                        // Update the CSS
+                                        cssText = cssText.substring(0, startPos + 1) + 
+                                                 updatedRule + 
+                                                 cssText.substring(endPos - 1);
+                                        
+                                        // Add to replaced images list
+                                        replacedImages.push({
+                                            type: 'css-hero',
+                                            selector: heroMatch[0].trim(),
+                                            originalSrc: originalUrl,
+                                            newSrc: newSrc,
+                                            dimensions: '1600x900'
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Process other background images in CSS
+                        // Updated regex to catch both background: url() and background-image: url() patterns
+                        const bgPattern = /background(-image)?:\s*[^;]*url\(['"]?([^'"]+)['"]?\)/g;
+                        
+                        cssText = cssText.replace(bgPattern, (match, p1, p2) => {
+                            // Don't replace the ones we already processed as heroes
+                            if (match.includes("picsum.photos/1600/900")) {
+                                return match;
+                            }
+                            
+                            // Default sizes when we can't determine actual size
+                            let width = 400;
+                            let height = 300;
+                            
+                            // Try to determine if this is for a hero element based on the selector
+                            const selectorEnd = cssText.lastIndexOf('{', cssText.indexOf(match));
+                            if (selectorEnd !== -1) {
+                                const selectorStart = cssText.lastIndexOf('}', selectorEnd);
+                                const selector = cssText.substring(
+                                    selectorStart !== -1 ? selectorStart + 1 : 0, 
+                                    selectorEnd
+                                ).trim();
+                                
+                                // Check if selector suggests a hero image
+                                if (/hero|banner|header|jumbotron|showcase|carousel|slide/.test(selector)) {
+                                    width = 1600;
+                                    height = 900;
+                                }
+                                // Check for card or thumbnail selectors
+                                else if (/card|box|tile|thumb|thumbnail/.test(selector)) {
+                                    width = 600;
+                                    height = 400;
+                                }
+                                // Check for small UI elements
+                                else if (/icon|button|avatar|profile|badge/.test(selector)) {
+                                    width = 100;
+                                    height = 100;
+                                }
+                            }
+                            
+                            // Extract original URL
+                            const originalUrl = p2;
+                            const randomSeed = Math.random();
+                            const newSrc = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+                            
+                            // Add to replaced images list if URL was found
+                            replacedImages.push({
+                                type: 'css',
+                                originalSrc: originalUrl,
+                                newSrc: newSrc,
+                                dimensions: `${width}x${height}`
+                            });
+                            
+                            // Keep the original property (background or background-image) but replace the URL
+                            return match.replace(/url\(['"]?([^'"]+)['"]?\)/g, 
+                                `url('${newSrc}')`);
+                        });
+                        
+                        styleEl.textContent = cssText;
+                    }
+                });
+                
+                // Find all base64 images in any attribute or style and replace them
+                const allNodes = document.createNodeIterator(doc.documentElement, NodeFilter.SHOW_ELEMENT);
+                let currentNode;
+                while (currentNode = allNodes.nextNode()) {
+                    const attributes = currentNode.attributes;
+                    if (!attributes) continue;
+                    
+                    for (let i = 0; i < attributes.length; i++) {
+                        const attr = attributes[i];
+                        if (attr.value.includes('data:image')) {
+                            // Track original value
+                            const originalValue = attr.value;
+                            
+                            // Default sizes for base64 images
+                            const width = 300;
+                            const height = 200;
+                            const randomSeed = Math.random();
+                            
+                            // Create a new value
+                            const newValue = attr.value.replace(/data:image\/[^;]+;base64,[^'")\s]+/g, 
+                                `https://picsum.photos/${width}/${height}?random=${randomSeed}`);
+                            
+                            // Only add to replaced images list if something changed
+                            if (newValue !== originalValue) {
+                                replacedImages.push({
+                                    type: 'base64',
+                                    element: currentNode.tagName,
+                                    attribute: attr.name
+                                });
+                            }
+                            
+                            attr.value = newValue;
+                        }
+                    }
+                }
+				// Find all base64 audio in any attribute or style and replace them
+				const allNodesForAudio = document.createNodeIterator(doc.documentElement, NodeFilter.SHOW_ELEMENT);
+				let currentNodeAudio;
+				while (currentNodeAudio = allNodesForAudio.nextNode()) {
+					const attributes = currentNodeAudio.attributes;
+					if (!attributes) continue;
+					
+					for (let i = 0; i < attributes.length; i++) {
+						const attr = attributes[i];
+						// Check for base64 audio data
+						if (attr.value.includes('data:audio/') || 
+							attr.value.includes('data:application/ogg') || 
+							attr.value.includes('data:application/octet-stream')) {
+							// Track original value
+							const originalValue = attr.value;
+							
+							// Determine if it should be long or short audio based on size or context
+							const isLong = attr.value.length > 10000 || // Large base64 likely means longer audio
+									 currentNodeAudio.hasAttribute('loop') || 
+									 (currentNodeAudio.className || '').includes('music') ||
+									 (currentNodeAudio.id || '').includes('music');
+							
+							const newSrc = getRandomAudioFile(isLong);
+							
+							// Create a new value
+							const newValue = attr.value.replace(/data:(audio\/[^;]+|application\/ogg|application\/octet-stream);base64,[^'")\s]+/g, newSrc);
+							
+							// Only add to replaced audio list if something changed
+							if (newValue !== originalValue) {
+								replacedAudio.push({
+									type: 'base64',
+									element: currentNodeAudio.tagName,
+									attribute: attr.name,
+									soundType: isLong ? 'long' : 'short'
+								});
+							}
+							
+							attr.value = newValue;
+						}
+					}
+				}
+				// Find all base64 video in any attribute or style and replace them
+				const allNodesForVideo = document.createNodeIterator(doc.documentElement, NodeFilter.SHOW_ELEMENT);
+				let currentNodeVideo;
+				while (currentNodeVideo = allNodesForVideo.nextNode()) {
+					const attributes = currentNodeVideo.attributes;
+					if (!attributes) continue;
+					
+					for (let i = 0; i < attributes.length; i++) {
+						const attr = attributes[i];
+						// Check for base64 video data
+						if (attr.value.includes('data:video/')) {
+							// Track original value
+							const originalValue = attr.value;
+							
+							const newSrc = getRandomVideoFile();
+							
+							// Create a new value
+							const newValue = attr.value.replace(/data:video\/[^;]+;base64,[^'")\s]+/g, newSrc);
+							
+							// Only add to replaced videos list if something changed
+							if (newValue !== originalValue) {
+								replacedVideos.push({
+									type: 'base64',
+									element: currentNodeVideo.tagName,
+									attribute: attr.name
+								});
+							}
+							
+							attr.value = newValue;
+						}
+					}
+				}
+            }
+            
+            // Process all audio elements if needed
+            if (replaceAudioActive) {
+                // Process <audio> elements
+                const audioElements = doc.querySelectorAll('audio');
+                audioElements.forEach(audio => {
+                    const originalSrc = audio.src;
+                    const isLong = shouldUseLongSound(audio, audioType);
+                    const newSrc = getRandomAudioFile(isLong);
+                    
+                    // Replace the src attribute
+                    audio.src = newSrc;
+                    
+                    // Clear any source children and add a new one
+                    while (audio.firstChild) {
+                        audio.removeChild(audio.firstChild);
+                    }
+                    
+                    const source = doc.createElement('source');
+                    source.src = newSrc;
+                    source.type = 'audio/mpeg';
+                    audio.appendChild(source);
+                    
+                    // Add to replaced audio list
+                    replacedAudio.push({
+                        type: 'audio',
+                        originalSrc: originalSrc || 'unknown',
+                        newSrc: newSrc,
+                        soundType: isLong ? 'long' : 'short'
+                    });
+                });
+                
+                // Process <source> elements within <audio> tags
+                const sourceElements = doc.querySelectorAll('audio > source');
+                sourceElements.forEach(source => {
+                    const originalSrc = source.src || source.getAttribute('src');
+                    if (originalSrc) {
+                        const parent = source.parentElement;
+                        const isLong = shouldUseLongSound(parent, audioType);
+                        const newSrc = getRandomAudioFile(isLong);
+                        
+                        source.src = newSrc;
+                        source.type = 'audio/mpeg';
+                        
+                        replacedAudio.push({
+                            type: 'source',
+                            originalSrc: originalSrc,
+                            newSrc: newSrc,
+                            soundType: isLong ? 'long' : 'short'
+                        });
+                    }
+                });
+                
+                // Process elements with data-audio attributes
+                const dataAudioElements = doc.querySelectorAll('[data-audio], [data-sound]');
+                dataAudioElements.forEach(el => {
+                    const originalSrc = el.getAttribute('data-audio') || el.getAttribute('data-sound');
+                    if (originalSrc) {
+                        const isLong = shouldUseLongSound(el, audioType);
+                        const newSrc = getRandomAudioFile(isLong);
+                        
+                        if (el.hasAttribute('data-audio')) {
+                            el.setAttribute('data-audio', newSrc);
+                        }
+                        if (el.hasAttribute('data-sound')) {
+                            el.setAttribute('data-sound', newSrc);
+                        }
+                        
+                        replacedAudio.push({
+                            type: 'data-attribute',
+                            originalSrc: originalSrc,
+                            newSrc: newSrc,
+                            soundType: isLong ? 'long' : 'short'
+                        });
+                    }
+                });
+                
+                // Process inline JavaScript that might contain audio paths
+                const scriptElements = doc.querySelectorAll('script');
+                scriptElements.forEach(scriptEl => {
+                    if (scriptEl.textContent) {
+                        let scriptContent = scriptEl.textContent;
+                        
+                        // Look for common audio file patterns in JS
+                        const audioFilePatterns = [
+                            /['"]([^'"]*\.mp3)['"]/, 
+                            /['"]([^'"]*\.wav)['"]/, 
+                            /['"]([^'"]*\.ogg)['"]/, 
+                            /['"]([^'"]*\.m4a)['"]/,
+                            /['"]([^'"]*\.aac)['"]/
+                        ];
+                        
+                        audioFilePatterns.forEach(pattern => {
+                            scriptContent = scriptContent.replace(pattern, (match, p1) => {
+                                // Don't replace URLs that are already in our replacement lists
+                                if (shortAudioFiles.includes(p1) || longAudioFiles.includes(p1)) {
+                                    return match;
+                                }
+                                
+                                // Determine if it should be a long or short sound
+                                // For script content, look for clues in the variable name or context
+                                const isLong = p1.includes('music') || p1.includes('background') || 
+                                            p1.includes('soundtrack') || 
+                                            match.includes('loop') || match.includes('background');
+                                            
+                                const newSrc = getRandomAudioFile(isLong);
+                                
+                                replacedAudio.push({
+                                    type: 'script',
+                                    originalSrc: p1,
+                                    newSrc: newSrc,
+                                    soundType: isLong ? 'long' : 'short'
+                                });
+                                
+                                return match.replace(p1, newSrc);
+                            });
+                        });
+                        
+                        scriptEl.textContent = scriptContent;
+                    }
+                });
+            }
+            
+            // Process all video elements if needed
+            if (replaceVideoActive) {
+                // Process <video> elements
+                const videoElements = doc.querySelectorAll('video');
+                videoElements.forEach(video => {
+                    const originalSrc = video.src;
+                    const newSrc = getRandomVideoFile();
+                    
+                    // Replace the src attribute
+                    video.src = newSrc;
+                    
+                    // Ensure controls are enabled to make it more usable
+                    video.setAttribute('controls', '');
+                    
+                    // Clear any source children and add a new one
+                    while (video.firstChild) {
+                        video.removeChild(video.firstChild);
+                    }
+                    
+                    const source = doc.createElement('source');
+                    source.src = newSrc;
+                    source.type = 'video/mp4';
+                    video.appendChild(source);
+                    
+                    // Add to replaced videos list
+                    replacedVideos.push({
+                        type: 'video',
+                        originalSrc: originalSrc || 'unknown',
+                        newSrc: newSrc
+                    });
+                });
+                
+                // Process <source> elements within <video> tags
+                const sourceElements = doc.querySelectorAll('video > source');
+                sourceElements.forEach(source => {
+                    const originalSrc = source.src || source.getAttribute('src');
+                    if (originalSrc) {
+                        const newSrc = getRandomVideoFile();
+                        
+                        source.src = newSrc;
+                        source.type = 'video/mp4';
+                        
+                        replacedVideos.push({
+                            type: 'source',
+                            originalSrc: originalSrc,
+                            newSrc: newSrc
+                        });
+                    }
+                });
+                
+                // Process iframes that might contain videos (YouTube, Vimeo, etc.)
+                const iframeElements = doc.querySelectorAll('iframe');
+                iframeElements.forEach(iframe => {
+                    const originalSrc = iframe.src;
+                    
+                    // Only process video iframes
+                    if (originalSrc && (
+                        originalSrc.includes('youtube.com') || 
+                        originalSrc.includes('youtu.be') || 
+                        originalSrc.includes('vimeo.com') || 
+                        originalSrc.includes('dailymotion.com') ||
+                        originalSrc.includes('video') ||
+                        originalSrc.includes('player') ||
+                        iframe.className.includes('video') ||
+                        iframe.id.includes('video')
+                    )) {
+                        // Get iframe dimensions
+                        const width = iframe.width || iframe.style.width || '640';
+                        const height = iframe.height || iframe.style.height || '360';
+                        
+                        // Create a video element to replace the iframe
+                        const video = doc.createElement('video');
+                        video.width = width;
+                        video.height = height;
+                        video.controls = true;
+                        video.autoplay = false;
+                        
+                        const newSrc = getRandomVideoFile();
+                        
+                        // Create and append source
+                        const source = doc.createElement('source');
+                        source.src = newSrc;
+                        source.type = 'video/mp4';
+                        video.appendChild(source);
+                        
+                        // Replace iframe with video
+                        iframe.parentNode.replaceChild(video, iframe);
+                        
+                        // Add to replaced videos list
+                        replacedVideos.push({
+                            type: 'iframe',
+                            originalSrc: originalSrc,
+                            newSrc: newSrc
+                        });
+                    }
+                });
+                
+                // Process any background videos or video references in CSS
+                const styleElementsForVideo = doc.querySelectorAll('style');
+                styleElementsForVideo.forEach(styleEl => {
+                    if (styleEl.textContent) {
+                        let cssText = styleEl.textContent;
+                        
+                        // Find common video file references in CSS
+                        const videoExtensions = ['mp4', 'webm', 'ogg', 'mov'];
+                        videoExtensions.forEach(ext => {
+                            const videoPattern = new RegExp(`url\\(['"](.*\\.${ext})['"\\)]`, 'gi');
+                            cssText = cssText.replace(videoPattern, (match, p1) => {
+                                const newSrc = getRandomVideoFile();
+                                
+                                replacedVideos.push({
+                                    type: 'css',
+                                    originalSrc: p1,
+                                    newSrc: newSrc
+                                });
+                                
+                                return match.replace(p1, newSrc);
+                            });
+                        });
+                        
+                        styleEl.textContent = cssText;
+                    }
+                });
+                
+                // Process inline JavaScript that might contain video paths
+                const scriptElementsForVideo = doc.querySelectorAll('script');
+                scriptElementsForVideo.forEach(scriptEl => {
+                    if (scriptEl.textContent) {
+                        let scriptContent = scriptEl.textContent;
+                        
+                        // Look for common video file patterns in JS
+                        const videoFilePatterns = [
+                            /['"]([^'"]*\.mp4)['"]/, 
+                            /['"]([^'"]*\.webm)['"]/, 
+                            /['"]([^'"]*\.ogg)['"]/, 
+                            /['"]([^'"]*\.mov)['"]/
+                        ];
+                        
+                        videoFilePatterns.forEach(pattern => {
+                            scriptContent = scriptContent.replace(pattern, (match, p1) => {
+                                // Don't replace URLs that are already in our replacement list
+                                if (videoFiles.includes(p1)) {
+                                    return match;
+                                }
+                                
+                                const newSrc = getRandomVideoFile();
+                                
+                                replacedVideos.push({
+                                    type: 'script',
+                                    originalSrc: p1,
+                                    newSrc: newSrc
+                                });
+                                
+                                return match.replace(p1, newSrc);
+                            });
+                        });
+                        
+                        // Look for YouTube and other video service URLs in JavaScript
+                        const videoServicePatterns = [
+                            /['"]https?:\/\/(www\.)?youtube\.com\/embed\/[^'"]+['"]/, 
+                            /['"]https?:\/\/(www\.)?youtu\.be\/[^'"]+['"]/, 
+                            /['"]https?:\/\/(www\.)?vimeo\.com\/[^'"]+['"]/, 
+                            /['"]https?:\/\/(www\.)?dailymotion\.com\/[^'"]+['"]/
+                        ];
+                        
+                        videoServicePatterns.forEach(pattern => {
+                            scriptContent = scriptContent.replace(pattern, (match) => {
+                                const newSrc = getRandomVideoFile();
+                                
+                                replacedVideos.push({
+                                    type: 'script-embed',
+                                    originalSrc: match.substring(1, match.length - 1), // Remove the quotes
+                                    newSrc: newSrc
+                                });
+                                
+                                return `"${newSrc}"`;
+                            });
+                        });
+                        
+                        scriptEl.textContent = scriptContent;
+                    }
+                });
+            }
+			
+			// Get the modified HTML
+			return { 
+				html: doc.documentElement.outerHTML,
+				replacedImages: replacedImages,
+                replacedAudio: replacedAudio,
+                replacedVideos: replacedVideos
+			};
+		}
+
+        // Function to create blob URL from HTML
+        function createBlobUrl(html) {
+            const blob = new Blob([html], { type: 'text/html' });
+            return URL.createObjectURL(blob);
+        }
+
+        // Function to download HTML
+        function downloadHTML(html, filename) {
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename || 'modified-page.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+		// Helper function to truncate long URLs
+		function truncateUrl(url) {
+			if (!url) return 'Unknown URL';
+			if (url.length <= 50) return url;
+			return url.substring(0, 47) + '...';
+		}
+
+		// URL method submit handler
+		document.getElementById('submitUrlBtn').addEventListener('click', async function() {
+			const url = document.getElementById('websiteUrl').value.trim();
+			const loadingIndicator = document.getElementById('loadingIndicatorUrl');
+			const errorMessage = document.getElementById('errorMessageUrl');
+			const successMessage = document.getElementById('successMessageUrl');
+			const previewContainer = document.getElementById('previewContainerUrl');
+			const previewFrame = document.getElementById('previewFrameUrl');
+			const openButton = document.getElementById('openUrlBtn');
+			
+			// Reset display
+			errorMessage.style.display = 'none';
+			successMessage.style.display = 'none';
+			previewContainer.style.display = 'none';
+			
+			if (!url) {
+				errorMessage.textContent = 'Please enter a valid URL';
+				errorMessage.style.display = 'block';
+				return;
+			}
+			
+			// Show loading indicator
+			loadingIndicator.style.display = 'block';
+			
+			try {
+				// Use the selected proxy to fetch the website content
+				const proxyUrl = getProxyUrl(url);
+				
+				const response = await fetch(proxyUrl);
+				
+				if (!response.ok) {
+					throw new Error(`Failed to fetch the website (Status: ${response.status})`);
+				}
+				
+				let htmlContent = await response.text();
+				
+				// Process the HTML content
+				const { html: modifiedHtml, replacedImages, replacedAudio, replacedVideos } = processHTML(htmlContent);
+				const parser = new DOMParser();
+				const svgReports = detectSvgs(parser.parseFromString(htmlContent, 'text/html'));
+				
+				// Create blob URL
+				const blobUrl = createBlobUrl(modifiedHtml);
+				
+				// Update the preview frame
+				previewFrame.src = blobUrl;
+				
+				// Set up the open button
+				openButton.onclick = function() {
+				    window.open(blobUrl, '_blank');
+				};
+				
+				// Add download handler
+				document.getElementById('downloadUrlBtn').onclick = function() {
+					downloadHTML(modifiedHtml, 'modified-site.html');
+				};
+				
+				// Build success message with replaced media list
+				let successHtml = '';
+				
+                // Get the selected replacement types
+                const replaceImagesActive = document.querySelector('#urlTab .replacement-option[data-replace="images"].active') !== null;
+                const replaceAudioActive = document.querySelector('#urlTab .replacement-option[data-replace="audio"].active') !== null;
+                const replaceVideoActive = document.querySelector('#urlTab .replacement-option[data-replace="video"].active') !== null;
+                
+                // Add image replacements info if applicable
+                if (replaceImagesActive && replacedImages.length > 0) {
+                    successHtml += '<p>The following images were replaced: (mouse over highlights for details)</p>';
+                    
+                    successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+                    
+                    replacedImages.forEach((img, index) => {
+                        let details = '';
+                        
+                        if (img.type === 'img') {
+                            details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
+                        } else if (img.type === 'background' || img.type === 'backgroundImage') {
+                            details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
+                        } else if (img.type === 'css') {
+                            details = `<strong>CSS background</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
+                        } else if (img.type === 'css-hero') {
+                            details = `<strong>Hero/banner element</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
+                        } else if (img.type === 'base64') {
+                            details = `<strong>Base64 image</strong> in ${img.element} ${img.attribute} attribute`;
+                        }
+                        
+                        successHtml += `<li>${details}</li>`;
+                        
+                        // Limit list size for performance
+                        if (index >= 49 && replacedImages.length > 50) {
+                            successHtml += `<li>... and ${replacedImages.length - 50} more images</li>`;
+                            return false; // Break forEach
+                        }
+                    });
+                    
+                    successHtml += '</ul>';
+                } else if (replaceImagesActive) {
+                    successHtml += '<p>No images were found to replace.</p>';
+                }
+                
+                // Add audio replacements info if applicable
+                if (replaceAudioActive && replacedAudio.length > 0) {
+                    successHtml += '<p>The following audio files were replaced:</p>';
+                    
+                    successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+                    
+                    replacedAudio.forEach((audio, index) => {
+                        let details = '';
+                        
+                        if (audio.type === 'audio') {
+                            details = `<strong>Audio tag</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        } else if (audio.type === 'source') {
+                            details = `<strong>Source tag</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        } else if (audio.type === 'data-attribute') {
+                            details = `<strong>Data attribute</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        } else if (audio.type === 'script') {
+                            details = `<strong>Script reference</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        }
+                        
+                        successHtml += `<li>${details}</li>`;
+                        
+                        // Limit list size for performance
+                        if (index >= 49 && replacedAudio.length > 50) {
+                            successHtml += `<li>... and ${replacedAudio.length - 50} more audio files</li>`;
+                            return false; // Break forEach
+                        }
+                    });
+                    
+                    successHtml += '</ul>';
+                } else if (replaceAudioActive) {
+                    successHtml += '<p>No audio files were found to replace.</p>';
+                }
+                
+                // Add video replacements info if applicable
+                if (replaceVideoActive && replacedVideos.length > 0) {
+                    successHtml += '<p>The following video files were replaced:</p>';
+                    
+                    successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+                    
+                    replacedVideos.forEach((video, index) => {
+                        let details = '';
+                        
+                        if (video.type === 'video') {
+                            details = `<strong>Video tag</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'source') {
+                            details = `<strong>Source tag</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'iframe') {
+                            details = `<strong>Embedded video</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'css') {
+                            details = `<strong>CSS reference</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'script') {
+                            details = `<strong>Script reference</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'script-embed') {
+                            details = `<strong>Embedded player script</strong>: ${truncateUrl(video.originalSrc)}`;
+                        }
+                        
+                        successHtml += `<li>${details}</li>`;
+                        
+                        // Limit list size for performance
+                        if (index >= 49 && replacedVideos.length > 50) {
+                            successHtml += `<li>... and ${replacedVideos.length - 50} more videos</li>`;
+                            return false; // Break forEach
+                        }
+                    });
+                    
+                    successHtml += '</ul>';
+                } else if (replaceVideoActive) {
+                    successHtml += '<p>No videos were found to replace.</p>';
+                }
+                
+                if (successHtml === '') {
+                    successHtml = '<p>No content was found to replace. Make sure you select at least one media type to replace.</p>';
+                }
+				// Add SVG reporting to success message
+				if (svgReports.length > 0) {
+				    let localSvgReports = [];
+					successHtml += '<p>The following SVG elements were detected (not replaced):</p>';
+					
+					successHtml += '<ul class="svg-reports" style="max-height: 50px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+					
+					svgReports.forEach((svg, index) => {
+						let details = '';
+						
+						if (svg.type === 'inline') {
+							details = `<strong>Inline SVG</strong>: ID: ${svg.id}, Class: ${svg.className}, Size: ${svg.dimensions}, Likely purpose: ${svg.purpose}`;
+						} else if (svg.type === 'image') {
+							details = `<strong>SVG Image</strong>: ${truncateUrl(svg.src)}, Size: ${svg.dimensions}, Likely purpose: ${svg.purpose}`;
+						} else if (svg.type === 'object/embed') {
+							details = `<strong>SVG ${svg.element}</strong>: ${truncateUrl(svg.src)}, Size: ${svg.dimensions}, Likely purpose: ${svg.purpose}`;
+						}
+						
+						successHtml += `<li>${details}</li>`;
+						
+						// Limit list size for performance
+						if (index >= 49 && svgReports.length > 50) {
+							successHtml += `<li>... and ${svgReports.length - 50} more SVG elements</li>`;
+							return false; // Break forEach
+						}
+					});
+					
+					successHtml += '</ul>';
+					window.svgReportsData = localSvgReports;
+				}
+				
+				// Show success message and preview
+				successMessage.innerHTML = successHtml;
+				successMessage.style.display = 'block';
+				previewContainer.style.display = 'block';
+				
+				// Apply tooltips to keywords
+				const keywords = [
+                    { keyword: "unsplash", tooltipText: "Unsplash is an image library that the assistant attempts to use generic links with tags to source images from, but it does not operate that way and often leads to broken links. Count these as Link to Any Other Website." },
+                    { keyword: "placeholder", tooltipText: "Websites with the word 'place' in their URL generally tend to be placeholder sites. Whether these links work or not is a toss-up, since many of these sites exist, but many do not stay up for long. Count these as Link to Image Placeholder Website." },
+					{ keyword: "placekitten", tooltipText: "Websites with the word 'place' in their URL generally tend to be placeholder sites. Whether these links work or not is a toss-up, since many of these sites exist, but many do not stay up for long. Count these as Link to Image Placeholder Website." },
+					{ keyword: "placecat", tooltipText: "Websites with the word 'place' in their URL generally tend to be placeholder sites. Whether these links work or not is a toss-up, since many of these sites exist, but many do not stay up for long. Count these as Link to Image Placeholder Website." },
+                    { keyword: "wikimedia", tooltipText: "Wikimedia Commons is a repository of freely licensed media that the assistant often hallucinates links to or references links that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+                    { keyword: "ibb.co", tooltipText: "ImgBB is a free image hosting service similar to Imgur. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+                    { keyword: "imgbb", tooltipText: "ImgBB is a free image hosting service similar to Imgur. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+                    { keyword: "imgur", tooltipText: "Imgur is a free image hosting service. The assistant will often hallucinate or reference links to this site that no longer exist. These are usually broken images. Count these as Link to Any Other Website." },
+                    { keyword: "mjwells", tooltipText: "This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website's directory structure. These will always be broken images. Count these as URL is Itself a Placeholder." },
+                    { keyword: "api", tooltipText: "The assistant is using an API (Application Programming Interface), which leverages functions and data on an external server, usually through the use of a key. Not all APIs require keys, but when they do the assistant will generally provide a placeholder that is meant to be replaced with an actual key. In these cases the API will not function properly and should be considered a placeholder. Count these as Other." },
+                    { keyword: "twemoji", tooltipText: "Twemoji was an open source library of emoji provided by Twitter... so you can probably guess who... I mean... what happened to it. A fork still exists on Github and is maintained by a former employee, but the site and any easy linking to it no longer exists. Count these as Link to Any Other Website." },
+                    { keyword: "pravatar", tooltipText: "Pravatar is a placeholder site that specializes in random avatar images. These would mostly be appropriate when the webpage calls for images of people. Count these as Link to Image Placeholder Website." },
+                    { keyword: "base64", tooltipText: "This is a Base64 encoded image attempting to create inline images with binary data. There are no external or internal image links. These will always show as broken images. Count these as URL is Itself a Placeholder." },
+                    { keyword: "www.w3.org", tooltipText: "This is an SVG (Scalable Vector Graphics) image that has been hardcoded inline in the HTML. These can be quite complex, but the assistant is capable of using them to make simple shapes filled with colors and text to serve as proper placeholders. The www.w3.org link is not an external resource but acts as a sort of declaration to let the HTML know that it should read this line of code as an SVG. Count these as URL is Itself a Placeholder." },
+                    { keyword: "data:image/svg", tooltipText: "This is an SVG (Scalable Vector Graphics) image that has been hardcoded inline in the HTML. These can be quite complex, but the assistant is capable of using them to make simple shapes filled with colors and text to serve as proper placeholders. If there is not a www.w3.org declaration associated with this SVG, then it does not abide by best practices and should be mentioned in your rationales and (if chosen) your follow-up. Count these as URL is Itself a Placeholder, but they should probably be rated a maximum of 4." },
+                    { keyword: "file:///C:", tooltipText: "This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website's directory structure. These will always be broken images. Count these as URL is Itself a Placeholder." },
+                    { keyword: "data:image/", tooltipText: "This is a locally sourced image that the webpage expects to be uploaded into a local directory within the website's directory structure. These will always be broken images. Count these as URL is Itself a Placeholder." },
+		    { keyword: "freesound", tooltipText: "Freesound.org is a collaborative database of Creative Commons Licensed sounds. These audio files are free to use and should work properly, but are not really meant to be directly linked. Treat these as Link to Any Other Website." },
+		    { keyword: "example.com", tooltipText: "Example.com is a resource that provides sample placeholders of a variety of files and links for use in  sites and any documentation that may need generic examples. Treat these as URL is Itself a Placeholder." },
+		    { keyword: "transparenttextures", tooltipText: "Transparentterxtures.com is a resource that provides transparent textures for download or for direct linking into websites for prototyping. Treat these as Link to Image Placeholder Website." },
+		    { keyword: "youtube", tooltipText: "Youtube is Youtube. The assistant will often link to Youtube videos and they will usually not work since it requires specific embedding. Unless you see VIDEO_ID or similar in the link, treat these as Link to Any Other Website." },
+		    { keyword: "VIDEO_ID", tooltipText: "This is a placeholder put into links to video sites that expects the user to replace it with valid video IDs. Treat these as URL Itself is a Placeholder." }
+                    // Add audio-specific keywords for tooltips
+                ];
+
+				keywords.forEach(item => {
+					const regex = new RegExp(`\\b${item.keyword}\\b`, 'gi');
+					
+					document.querySelectorAll('.success li').forEach(li => {
+						// Skip if the list item is within an element with the 'svg-reports' class
+						if (li.closest('.svg-reports')) return;
+						// Get all text nodes in the list item
+						const textNodes = [];
+						const walkNodes = document.createTreeWalker(li, NodeFilter.SHOW_TEXT, null, false);
+						let node;
+						while (node = walkNodes.nextNode()) {
+							textNodes.push(node);
+						}
+						
+						// Process each text node separately
+						textNodes.forEach(textNode => {
+							const parent = textNode.parentNode;
+							// Skip if parent is already a tooltip
+							if (parent.classList && parent.classList.contains('tooltip-keyword')) {
+								return;
+							}
+							
+							// Replace text and create spans
+							const text = textNode.nodeValue;
+							const fragments = text.split(regex);
+							
+							if (fragments.length > 1) { // If we have matches
+								const container = document.createDocumentFragment();
+								
+								for (let i = 0; i < fragments.length; i++) {
+									// Add text fragment
+									if (fragments[i]) {
+										container.appendChild(document.createTextNode(fragments[i]));
+									}
+									
+									// Add matching keyword with tooltip
+									if (i < fragments.length - 1) {
+										const match = text.match(regex)[i];
+										const span = document.createElement('span');
+										span.className = 'tooltip-keyword';
+										span.setAttribute('data-tooltip', item.tooltipText);
+										span.textContent = match;
+										container.appendChild(span);
+									}
+								}
+								
+								parent.replaceChild(container, textNode);
+							}
+						});
+					});
+				});
+				attachTooltipListeners();
+				
+			} catch (error) {
+				// Show error
+				errorMessage.textContent = `Error: ${error.message}. Try using a different proxy or the HTML method instead.`;
+				errorMessage.style.display = 'block';
+				console.error('Error:', error);
+			} finally {
+				// Hide loading indicator
+				loadingIndicator.style.display = 'none';
+			}
+		});
+
+		// HTML method submit handler
+		document.getElementById('submitHtmlBtn').addEventListener('click', function() {
+			const htmlContent = document.getElementById('htmlContent').value.trim();
+			const loadingIndicator = document.getElementById('loadingIndicatorHtml');
+			const errorMessage = document.getElementById('errorMessageHtml');
+			const successMessage = document.getElementById('successMessageHtml');
+			const previewContainer = document.getElementById('previewContainerHtml');
+			const previewFrame = document.getElementById('previewFrameHtml');
+			const openLink = document.getElementById('openHtmlLink');
+			
+			// Reset display
+			errorMessage.style.display = 'none';
+			successMessage.style.display = 'none';
+			previewContainer.style.display = 'none';
+			
+			if (!htmlContent) {
+				errorMessage.textContent = 'Please enter HTML content';
+				errorMessage.style.display = 'block';
+				return;
+			}
+			
+			// Show loading indicator
+			loadingIndicator.style.display = 'block';
+			
+			try {
+				// Process the HTML content
+				const { html: modifiedHtml, replacedImages, replacedAudio, replacedVideos } = processHTML(htmlContent);
+				const parser = new DOMParser();
+				const svgReports = detectSvgs(parser.parseFromString(htmlContent, 'text/html'));
+				
+				// Create blob URL
+				const blobUrl = createBlobUrl(modifiedHtml);
+				
+				// Update the preview frame
+				previewFrame.src = blobUrl;
+				
+				// Update open link
+				openLink.href = blobUrl;
+				
+				// Add download handler
+				document.getElementById('downloadHtmlBtn').onclick = function() {
+					downloadHTML(modifiedHtml, 'modified-site.html');
+				};
+				
+				// Build success message with replaced media list
+                let successHtml = '';
+                
+                // Get the selected replacement types
+                const replaceImagesActive = document.querySelector('#htmlTab .replacement-option[data-replace="images"].active') !== null;
+                const replaceAudioActive = document.querySelector('#htmlTab .replacement-option[data-replace="audio"].active') !== null;
+                const replaceVideoActive = document.querySelector('#htmlTab .replacement-option[data-replace="video"].active') !== null;
+                
+                // Add image replacements info if applicable
+                if (replaceImagesActive && replacedImages.length > 0) {
+                    successHtml += '<p>The following images were replaced:</p>';
+                    
+                    successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+                    
+                    replacedImages.forEach((img, index) => {
+                        let details = '';
+                        
+                        if (img.type === 'img') {
+                            details = `<strong>Image tag</strong>: ${truncateUrl(img.originalSrc)} (${img.dimensions || 'unknown size'})`;
+                        } else if (img.type === 'background' || img.type === 'backgroundImage') {
+                            details = `<strong>${img.element} background</strong>: ${truncateUrl(img.originalSrc)}`;
+                        } else if (img.type === 'css') {
+                            details = `<strong>CSS background</strong>: ${truncateUrl(img.originalSrc)}`;
+                        } else if (img.type === 'base64') {
+                            details = `<strong>Base64 image</strong> in ${img.element} ${img.attribute} attribute`;
+                        }
+                        
+                        successHtml += `<li>${details}</li>`;
+                        
+                        // Limit list size for performance
+                        if (index >= 49 && replacedImages.length > 50) {
+                            successHtml += `<li>... and ${replacedImages.length - 50} more images</li>`;
+                            return false; // Break forEach
+                        }
+                    });
+                    
+                    successHtml += '</ul>';
+                } else if (replaceImagesActive) {
+                    successHtml += '<p>No images were found to replace.</p>';
+                }
+                
+                // Add audio replacements info if applicable
+                if (replaceAudioActive && replacedAudio.length > 0) {
+                    successHtml += '<p>The following audio files were replaced:</p>';
+                    
+                    successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+                    
+                    replacedAudio.forEach((audio, index) => {
+                        let details = '';
+                        
+                        if (audio.type === 'audio') {
+                            details = `<strong>Audio tag</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        } else if (audio.type === 'source') {
+                            details = `<strong>Source tag</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        } else if (audio.type === 'data-attribute') {
+                            details = `<strong>Data attribute</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        } else if (audio.type === 'script') {
+                            details = `<strong>Script reference</strong>: ${truncateUrl(audio.originalSrc)} → ${audio.soundType} sound`;
+                        }
+                        
+                        successHtml += `<li>${details}</li>`;
+                        
+                        // Limit list size for performance
+                        if (index >= 49 && replacedAudio.length > 50) {
+                            successHtml += `<li>... and ${replacedAudio.length - 50} more audio files</li>`;
+                            return false; // Break forEach
+                        }
+                    });
+                    
+                    successHtml += '</ul>';
+                } else if (replaceAudioActive) {
+                    successHtml += '<p>No audio files were found to replace.</p>';
+                }
+                
+                // Add video replacements info if applicable
+                if (replaceVideoActive && replacedVideos.length > 0) {
+                    successHtml += '<p>The following video files were replaced:</p>';
+                    
+                    successHtml += '<ul style="max-height: 200px; overflow-y: auto; text-align: left; margin: 10px 0; padding-left: 20px;">';
+                    
+                    replacedVideos.forEach((video, index) => {
+                        let details = '';
+                        
+                        if (video.type === 'video') {
+                            details = `<strong>Video tag</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'source') {
+                            details = `<strong>Source tag</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'iframe') {
+                            details = `<strong>Embedded video</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'css') {
+                            details = `<strong>CSS reference</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'script') {
+                            details = `<strong>Script reference</strong>: ${truncateUrl(video.originalSrc)}`;
+                        } else if (video.type === 'script-embed') {
+                            details = `<strong>Embedded player script</strong>: ${truncateUrl(video.originalSrc)}`;
+                        }
+                        
+                        successHtml += `<li>${details}</li>`;
+                        
+                        // Limit list size for performance
+                        if (index >= 49 && replacedVideos.length > 50) {
+                            successHtml += `<li>... and ${replacedVideos.length - 50} more videos</li>`;
+                            return false; // Break forEach
+                        }
+                    });
+                    
+                    successHtml += '</ul>';
+                } else if (replaceVideoActive) {
+                    successHtml += '<p>No videos were found to replace.</p>';
+                }
+                
+                if (successHtml === '') {
+                    successHtml = '<p>No content was found to replace. Make sure you select at least one media type to replace.</p>';
+                }
+                
+                successHtml += '<p>Preview shown below.</p>';
+				
+				// Show success message and preview
+				successMessage.innerHTML = successHtml;
+				successMessage.style.display = 'block';
+				previewContainer.style.display = 'block';
+				
+			} catch (error) {
+				// Show error
+				errorMessage.textContent = `Error: ${error.message}`;
+				errorMessage.style.display = 'block';
+				console.error('Error:', error);
+			} finally {
+				// Hide loading indicator
+				loadingIndicator.style.display = 'none';
+			}
+		});
+		
+		const tooltip = document.createElement('div');
+		tooltip.id = 'tooltip';
+		tooltip.style.maxWidth = '300px';
+		tooltip.style.position = 'absolute';
+		tooltip.style.background = '#191e26';
+		tooltip.style.color = '#fff';
+		tooltip.style.border = '1px solid #fff';
+		tooltip.style.padding = '2px 6px';
+		tooltip.style.borderRadius = '4px';
+		tooltip.style.fontSize = '14px';
+		tooltip.style.display = 'none';
+		tooltip.style.pointerEvents = 'none'; // so it doesn't interfere with mouse events
+		document.body.appendChild(tooltip);
+
+		// Attach event listeners to each keyword span
+		document.querySelectorAll('.tooltip-keyword').forEach(elem => {
+			elem.addEventListener('mouseenter', function(e) {
+				tooltip.textContent = this.getAttribute('data-tooltip');
+				tooltip.style.display = 'block';
+			});
+			elem.addEventListener('mousemove', function(e) {
+				tooltip.style.left = (e.pageX + 10) + 'px';
+				tooltip.style.top = (e.pageY + 10) + 'px';
+			});
+			elem.addEventListener('mouseleave', function() {
+				tooltip.style.display = 'none';
+			});
+		});
+    </script>
+	<p style="color: white; text-align: center;">
+		<a href="https://mjwells-inv.github.io/imageswap/oldswap.html" style="color: white; text-decoration: underline;">Old Image and Audio Replacer can still be found here.</a>
+	</p>
+</body>
+</html>
