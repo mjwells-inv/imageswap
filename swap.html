@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1124,9 +1125,20 @@
                     const classNames = img.className || '';
                     const widthClassMatch = classNames.match(/w-(\d+)/);
                     const heightClassMatch = classNames.match(/h-(\d+)/);
-                    
-                    if (widthClassMatch && widthClassMatch[1]) width = widthClassMatch[1];
-                    if (heightClassMatch && heightClassMatch[1]) height = heightClassMatch[1];
+										
+					// First check if the URL already has dimensions we can use
+					const urlDimensionsMatch = originalSrc.match(/(\d+)x(\d+)/);
+					if (urlDimensionsMatch && urlDimensionsMatch[1] && urlDimensionsMatch[2]) {
+						width = parseInt(urlDimensionsMatch[1]);
+						height = parseInt(urlDimensionsMatch[2]);
+					} else if (heightClassMatch && heightClassMatch[1]) {
+						// Only use Tailwind classes if we couldn't get dimensions from the URL
+						// Convert Tailwind height values to proper pixel equivalents
+						const tailwindValue = parseInt(heightClassMatch[1]);
+						// Tailwind h-{n} is n*0.25rem, and h-48 is 12rem (48*0.25)
+						height = tailwindValue * 4; // Simplified approximation (1rem ≈ 16px)
+					}
+					// Don't use w-* classes for width as w-full is common and not a pixel value
                     
                     // Method 6: If image is taking up most of the width of its container, it's likely a hero/banner
                     const imgStyle = window.getComputedStyle && img.style ? window.getComputedStyle(img) : null;
