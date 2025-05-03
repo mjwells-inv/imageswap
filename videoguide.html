@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video/Placeholder Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            height: 80vh;
+            margin: 0px;
+            background-color: #f0f0f0;
+			padding: 20px;
+			padding-top: 10px;
+        }
+        .container-wrapper {
+            display: flex;
+            gap: 20px;
+        }
+        .container {
+			background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+		.copytext {
+            width: 375px;
+			height: 30px;
+			background: white;
+			text-align: center;
+			font-size: 1.1em;
+			margin-top: 5px;
+        }
+        .text-block {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            overflow-y: auto;
+            max-height: 800px;
+            display: none;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question h3 {
+            margin-top:5px;
+			margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .answers {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .answer {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #fafafa;
+        }
+        .answer:hover {
+            background-color: #f5f5f5;
+        }
+        .answer.selected {
+            background-color: #28a745;
+            color: white;
+            border-color: #0056b3;
+        }
+		.result-summary {
+            display: block;
+			text-align: center;
+			font-size: 0.7em;
+			font-style: italic;
+			margin-left: 10px;
+			margin-right: 0px;
+        }
+        .disabled {
+            pointer-events: none;
+            background-color: #e0e0e0;
+            color: #888;
+        }
+        #result {
+            display: none;
+			flex-direction: column;
+			justify-content: space-between;
+            padding: 10px;
+			padding-right: 20px;
+            background-color: white;
+            border: 8px solid #000000;
+            border-radius: 8px;
+            text-align: left;
+			font-size: 1.2em;
+			width: 400px;
+        }
+        #clearButton {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #fafafa;
+			border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        #clearButton:hover {
+            background-color: #f5f5f5;
+        }
+        #notNecessaryText {
+            display: none;
+            color: #888;
+            font-style: italic;
+        }
+        #toggleInstructions {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #fafafa;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        #toggleInstructions:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="margin-top: 0; margin-bottom:10px;">Video Placeholders Guide</h1>
+	<div class="container-wrapper">
+		<div class="text-block" id="instructionsBlock">
+			<span style="font-size: .8em; letter-spacing:0.15px;">This tool follows the same logic as the Images and Placeholders Guide, with one key difference. This tool is built on the assumption that videos are always intended by the model to be placeholders that the user will later update or replace. As far as we are aware, that assumption has been accurate for pretty much every task in this campaign so far. However, if you think that assumption might not be valid for a specific task, please post about it in the Slack channel and ask for guidance there.</span><br><br>   
+			
+			<h2>What do you see where there should be a video?</h2>
+			
+			<b>Broken video:</b> Any situation where the video does not successfully play should be included in this option. For example, there could be a video player frame but nothing happens or you get an error message when you click play, or there could be nothing visible at all. <br>
+			
+			<br><b>Working video:</b> If a video (any video) plays successfully, choose this option.<p>
+
+			<br><h2>What is the video URL?</h2>
+			If the video works, you don't need to mess with this.<br> 
+			For broken videos, use "inspect" or "view page source" to find the URL or filename for the video. Be careful, because the video tag may also include a URL for the video's thumbnail image, but that's not the one you want.<br>
+	 
+			<br><b>URL is itself a placeholder:</b> Choose this option if the webpage links to the video with a made-up URL or filename that is intended to be replaced by the user (like “video1.mp4” or “https://example.com/path/to/yourvideo.mp4”). If only part of the URL is intended to be replaced (like "https://www.youtube.com/embed/YourVideoID") that also counts. <br>
+			<br><i>Note:A local file name like "Path_to_video.mp4" will show up as "Path_to_video.mp4" when you use "inspect" or look in the source code. However, if you use "copy image address," it will look like "https://featherstorageprod-xxxxx.azurefd.net/assets/Path_to_video.mp4". So if you see a "featherstorage" URL, a placeholder file name was probably used.</i><p> 
+
+			<br><b>Any Other Situation:</b> Just like it says. If the URL/filename is anything other than a made-up placeholder clearly intended to be replaced, choose this. <br><p>
+
+			<br><h2>Does the completion text say that placeholders were used?</h2>
+			We have been told that any time placeholders are used, the completion text must explain to the user that placeholders were used. The text does not need to use the word "placeholder." Any statement that the video URL or file name can or must be replaced by the user should count as a "yes," and <b>Ctrl+f</b> searching for the word "replace" is often the quickest way to find placeholder explanations.<p>   
+			<br><b>Yes:</b> We are not currently evaluating the quality or accuracy of the completion text, so choose "yes" if the completion text states that a placeholder was used for a video, even if part of the statement (such as the specific video used) isn't accurate.<p>
+			<br><b>No:</b> Choose this if the text doesn't state that the user can or should replace the included video with their own. If the completion includes only a webpage link and no additional text, that always counts as a "no."<p>
+
+			<br><h2>General guidelines for failure to acknowledge placeholders</h2> 
+			Failure to acknowledge placeholders in the completion text should be considered a minor flaw. It may negatively affect functionality scores above 4, but it should never push a 4 down to a 3 or have any effect on scores below 4.<br> 
+			(However, it can always be used as an overall rating tie-breaker if there aren’t more significant differences to consider.)   		
+		</div>
+		
+        <div class="container">
+
+			<!-- Question 1 -->
+            <div class="question" id="question1">
+                <h3>What do you see where there should be a video?</h3>
+                <div class="answers">
+                    <!-- <div class="answer.disabled" onclick="selectAnswer('question1', this)">Nothing</div> -->
+                    <div class="answer" onclick="selectAnswer('question1', this)">Broken video</div>
+                    <div class="answer" onclick="selectAnswer('question1', this)">Working video</div>
+                    <!-- <div class="answer.disabled" onclick="selectAnswer('question1', this)">Actual image</div> -->
+                </div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question" id="question2">
+                <h3>What is the video URL? <span id="notNecessaryText">(Not Necessary)</span></h3>
+                <div class="answers">
+                    <div class="answer" onclick="selectAnswer('question2', this)">URL is itself a placeholder</div>
+                    <div class="answer" onclick="selectAnswer('question2', this)">Any other situation</div>
+                    <!-- <div class="answer" onclick="selectAnswer('question2', this)">Link to any other website / Other</div> -->
+                </div>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question" id="question3">
+                <h3>Does the completion text say that placeholders were used?</h3>
+                <div class="answers">
+                    <div class="answer" onclick="selectAnswer('question3', this)">Yes</div>
+                    <div class="answer" onclick="selectAnswer('question3', this)">No</div>
+                </div>
+            </div>
+			
+			<!-- Toggle Instructions Button -->
+            <button id="toggleInstructions" onclick="toggleInstructions()">Toggle Instructions</button>
+
+            <!-- Clear Answers Button -->
+            <button id="clearButton" onclick="clearAnswers()">Clear Answers</button>
+
+
+        </div>
+        		
+        <!-- Result Section -->
+        <div id="result">Result text</div>
+
+    </div>
+
+    <script>
+        const selectedAnswers = {
+            question1: null,
+            question2: null,
+            question3: null
+        };
+
+		const resultsMapping = {
+			"Broken video, URL is itself a placeholder, Yes": `
+				<div>
+					<b>Maximum Functionality Score: 7</b>
+					<ul>
+						<li style="margin-bottom: 10px;">Placeholder URLs are always an acceptable option for the model to use.</li>
+						<li style="margin-bottom: 10px;">Treat the broken videos as placeholders rather than flaws. Do not penalize the completion for using placeholders.</li>
+						<li style="margin-bottom: 10px;">Evaluate the page as well as you can, imagining working videos in place of the broken ones.</li>
+						
+					</ul>
+				</div>
+				<div class="result-summary">
+					<br><b>Paste this line of text at the top of your justification:</b><br>
+					<input type="text" class="copytext" value="|| Broken Vid / URL is PH / Yes || Treat as PH / F7 max ||" readonly>
+				</div>
+				`,
+
+			"Broken video, URL is itself a placeholder, No": `
+				<div>
+					<b>Maximum Functionality Score: 6</b>
+					<ul>
+						<li style="margin-bottom: 10px;">Placeholder URLs are always an acceptable option for the model to use.</li>
+						<li style="margin-bottom: 10px;">Treat the broken videos as placeholders rather than flaws. Do not penalize the completion for using placeholders.</li>
+						<li style="margin-bottom: 10px;">Evaluate the page as well as you can, imagining working videos in place of the broken ones.</li>
+						<li style="margin-bottom: 10px;">Not acknowledging the use of placeholders in the completion text is considered a minor flaw, and the maximum functionality score has been lowered to account for this.</li>
+					</ul>
+				</div>
+				<div class="result-summary">
+					<br><b>Paste this line of text at the top of your justification:</b><br>
+					<input type="text" class="copytext" value="|| Broken Vid / URL is PH / No || Treat as PH / F6 max ||" readonly>
+				</div>
+				`,
+
+			"Broken video, Any other situation, Yes": `
+				<div>
+					<b>Maximum Functionality Score: 5</b>
+					<ul>
+						<li style="margin-bottom: 10px;">The maximum functionality score has been lowered due to the broken videos.</li>
+						<li style="margin-bottom: 10px;">For the rest of your evaluation, treat the broken videos as placeholders rather than flaws. Do not penalize the completion for using placeholders.</li>
+						<li style="margin-bottom: 10px;">Evaluate the page as well as you can, imagining working videos in place of the broken ones.</li>
+
+					</ul>
+				</div>
+				<div class="result-summary">
+					<br><b>Paste this line of text at the top of your justification:</b><br>
+					<input type="text" class="copytext" value="|| Broken Vid / Other / Yes || Treat as PH / F5 max ||" readonly>
+				</div>
+				`,
+
+			"Broken video, Any other situation, No": `
+				<div>
+					<b>Maximum Functionality Score: 4</b>
+					<ul>
+						<li style="margin-bottom: 10px;">The maximum functionality score has been lowered due to the broken videos.</li>
+						<li style="margin-bottom: 10px;">For the rest of your evaluation, treat the broken videos as placeholders rather than flaws. Do not penalize the completion for using placeholders.</li>
+						<li style="margin-bottom: 10px;">Evaluate the page as well as you can, imagining working videos in place of the broken ones.</li>
+						<li style="margin-bottom: 10px;">Not acknowledging the use of placeholders in the completion text is considered a minor flaw, and the maximum functionality score has been lowered to account for this.</li>
+
+					</ul>
+				</div>
+				<div class="result-summary">
+					<b>Paste this line of text at the top of your justification:</b><br>
+					<input type="text" class="copytext" value="|| Broken Vid / Other / No || Treat as PH / F4 max ||" readonly>
+				</div>
+				`,
+
+			"Working video, none, Yes": `
+				<div>
+					<b>Maximum Functionality Score: 7</b>
+					<ul>
+						<li style="margin-bottom: 10px;">Do not penalize the completion for using placeholders.</li>
+						<li style="margin-bottom: 10px;">Evaluate the page as well as you can, imagining appropriate videos in place of the placeholders.</li>
+					</ul>
+				</div>
+				<div class="result-summary">
+					<br><b>Paste this line of text at the top of your justification:</b><br>
+					<input type="text" class="copytext" value="|| Working Vid / Yes || Treat as PH / F7 max ||" readonly>
+				</div>	
+				`,
+
+			"Working video, none, No": `
+				<div>
+					<b>Maximum Functionality Score: 6</b>
+					<ul>
+						<li style="margin-bottom: 10px;">Do not penalize the completion for using placeholders.</li>
+						<li style="margin-bottom: 10px;">Evaluate the page as well as you can, imagining appropriate videos in place of the placeholders.</li>
+						<li style="margin-bottom: 10px;">Not acknowledging the use of placeholders in the completion text is considered a minor flaw, and the maximum functionality score has been lowered to account for this.</li>
+					</ul>
+				</div>
+				<div class="result-summary">
+					<br><b>Paste this line of text at the top of your justification:</b><br>
+					<input type="text" class="copytext" value="|| Working Vid / No || Treat as PH / F6 max ||" readonly>
+				</div>
+				`
+		};
+
+        function selectAnswer(questionId, element) {
+            const questionDiv = document.getElementById(questionId);
+            if (!questionDiv) {
+                console.error(`Question with ID "${questionId}" not found.`);
+                return;
+            }
+
+            // Clear previous selection for this question
+            const answers = questionDiv.querySelectorAll('.answer');
+            answers.forEach(answer => answer.classList.remove('selected'));
+
+            // Mark the clicked answer as selected
+            element.classList.add('selected');
+            selectedAnswers[questionId] = element.innerText;
+
+            // Special case: Disable question 2 if "Working video" is selected for question 1
+            if (questionId === 'question1') {
+                const question2Div = document.getElementById('question2');
+                const question2Answers = question2Div.querySelectorAll('.answer');
+                const notNecessaryText = document.getElementById('notNecessaryText');
+
+                if (element.innerText === 'Working video') {
+                    question2Answers.forEach(answer => answer.classList.add('disabled'));
+                    question2Answers.forEach(answer => answer.classList.remove('selected')); // Clear selection for question 2
+                    selectedAnswers.question2 = 'none'; // Reset question 2 answer
+                    notNecessaryText.style.display = 'inline';
+                } else {
+                    question2Answers.forEach(answer => answer.classList.remove('disabled'));
+                    notNecessaryText.style.display = 'none';
+                }
+            }
+
+            // Check if all relevant questions are answered
+            const relevantQuestionsAnswered = selectedAnswers.question1 !== null &&
+                selectedAnswers.question3 !== null &&
+                (selectedAnswers.question1 === 'Working video' || selectedAnswers.question2 !== null);
+
+            if (relevantQuestionsAnswered) {
+                const resultKey = Object.values(selectedAnswers).filter(Boolean).join(', ');
+                const resultHTML = resultsMapping[resultKey] || "No matching result found.";
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = resultHTML;
+                resultDiv.style.display = 'flex';
+            }
+        }
+
+        function clearAnswers() {
+            // Reset answers in the selectedAnswers object
+            selectedAnswers.question1 = null;
+            selectedAnswers.question2 = null;
+            selectedAnswers.question3 = null;
+
+            // Clear selected styles
+            document.querySelectorAll('.answer').forEach(answer => answer.classList.remove('selected', 'disabled'));
+
+            // Hide "Not Necessary" text for question 2
+            document.getElementById('notNecessaryText').style.display = 'none';
+
+            // Hide result
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+            resultDiv.innerText = '';
+        }
+
+        function toggleInstructions() {
+            const instructionsBlock = document.getElementById('instructionsBlock');
+            if (instructionsBlock.style.display === 'none' || instructionsBlock.style.display === '') {
+                instructionsBlock.style.display = 'block';
+            } else {
+                instructionsBlock.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
